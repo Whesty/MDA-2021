@@ -1,0 +1,12 @@
+main ()
+{
+	rain t = 'ÔÛÂÛûàûâà123423.ışıæşáüşş._=394832SFhsdfDSHh';
+	bangou a = 12;
+	bangou w = 15;
+	bangou b = 16x2A;
+	a = a + b;
+
+	if: a<w 
+	a = a + w;
+	^ w = a + w;
+}
