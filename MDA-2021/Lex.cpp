@@ -53,6 +53,15 @@ namespace Lex {
 				entryIT.iddatatype = IT::INT;
 				continue;
 			}
+			FST::FST fstTypeVoid(word[i], FST_VOID);
+			if (FST::execute(fstTypeVoid))
+			{
+				LT::Entry entryLT = writeEntry(entryLT, LEX_VOID, LT_TI_NULLIDX, line);
+				LT::Add(lextable, entryLT);
+
+				entryIT.iddatatype = IT::VOI;
+				continue;
+			}
 			FST::FST fstTypeString(word[i], FST_RAIN);
 			if (FST::execute(fstTypeString))
 			{
@@ -154,6 +163,7 @@ namespace Lex {
 				}
 				else if (!findFunc) {//Если это не функция то индитификатор
 					entryIT.idtype = IT::V;
+					if(entryIT.iddatatype == IT::NUL) throw ERROR_THROW_IN(200, line, position);
 					if (entryIT.iddatatype == IT::INT)// Если ранее была лексема integer
 						entryIT.value.vint = TI_INT_DEFAULT;
 					else

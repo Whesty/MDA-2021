@@ -1,6 +1,9 @@
+void func fr(bangou t, rain e){
+	runout t + e;
+}
 main ()
 {
-	rain t = '╘█┬█√р√тр123423.¤■¤ц■с№■■._=394832SFhsdfDSHh';
+	rain t = "╘█┬█√р√тр123423.¤■¤ц■с№■■._=394832SFhsdfDSHh";
 	bangou a = 12;
 	bangou w = 15;
 	bangou b = 16x2A;

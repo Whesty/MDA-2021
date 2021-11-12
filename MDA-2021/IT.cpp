@@ -10,6 +10,10 @@ namespace IT {
 		Table.table = new Entry[size];
 		return Table;
 	}
+	Entry Create(Entry ITEntry)
+	{
+		return ITEntry;
+	}
 	void Add(IdTable& idtable, Entry entry) {
 		if (idtable.size > idtable.max_size) throw ERROR_THROW(106);
 		idtable.table[idtable.size++] = entry;
@@ -40,12 +44,14 @@ namespace IT {
 		for (int i = 0; i < table.size; i++) {
 			flog << setw(6) << left <<i + 1  << "| ";
 			flog << setw(11) << left << table.table[i].id << "| ";
-			if (table.table[i].idtype == OP) flog <<setw(10)<< left << "-"<< " | ";
+			if (table.table[i].idtype == OP || table.table[i].idtype == LO) flog << setw(10) << left << "-" << " | ";
 			else
-			if (table.table[i].iddatatype == INT) {
-				flog << setw(10) << left << "bangou" << " | ";
-			}
-			else flog << setw(10) << left << "rain" << " | ";
+				if (table.table[i].iddatatype == INT) {
+					flog << setw(10) << left << "bangou" << " | ";
+				}
+				else if (table.table[i].iddatatype == STR)  flog << setw(10) << left << "rain" << " | ";
+				else if (table.table[i].iddatatype == VOI) flog << setw(10) << left << "void" << " | ";
+				else flog << setw(10) << left << "bangou(16)" << " | ";
 			switch (table.table[i].idtype)
 			{
 			case L: {flog << setw(19) << left << "Литерал" << " | "; break; }

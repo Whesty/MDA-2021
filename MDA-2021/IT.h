@@ -8,14 +8,14 @@
 #include "Parm.h"
 namespace IT			// таблица идентификаторов
 {
-	enum IDDATATYPE { INT = 1, STR = 2, INT16 = 3 };			// типы данных идентификаторов: integer, string
+	enum IDDATATYPE { INT = 1, STR = 2, INT16 = 3, NUL = 6, VOI = 4, CHR = 5 };			// типы данных идентификаторов: integer, string
 	enum IDTYPE { V = 1, F = 2, P = 3, L = 4, OP = 5, LO = 6 };	// типы идентификаторов: переменная, функция, параметр, литерал, оператор
 
 	struct Entry	// строка таблицы идентификаторов
 	{
 		int			idxfirstLE;			// индекс первой строки в таблице лексем
 		unsigned char	id[ID_MAXSIZE];		// индентификатор (автоматически усекается до ID_MAXSIZE)
-		IDDATATYPE	iddatatype;			// тип данных
+		IDDATATYPE	iddatatype = NUL;			// тип данных
 		IDTYPE		idtype;				// тип идентификатора
 		union
 		{
@@ -38,7 +38,6 @@ namespace IT			// таблица идентификаторов
 	IdTable Create(				// создать таблицу идентификаторов
 		int size				// емкость таблицы идентификаторов < TI_MAXSIZE
 	);
-
 	void Add(				// добавить строку в таблицу идентификаторов
 		IdTable& idtable,	// экземпляр таблицы идентификаторов
 		Entry entry			// строка таблицы идентификаторов

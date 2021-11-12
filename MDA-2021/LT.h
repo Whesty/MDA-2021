@@ -30,6 +30,7 @@
 #define LEX_EQUAL		'='
 #define LEX_ROOF		'^'
 #define LEX_IF			'w' // лексема уловия
+#define LEX_VOID		'd' // лексема void
 
 namespace LT		// таблица лексем
 {

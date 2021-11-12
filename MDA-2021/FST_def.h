@@ -18,6 +18,12 @@
 	FST::NODE(1, FST::RELATION('i', 3)),\
 	FST::NODE(1, FST::RELATION('n', 4)),\
 	FST::NODE()
+#define FST_VOID 5,	\
+	FST::NODE(1, FST::RELATION('v', 1)),\
+	FST::NODE(1, FST::RELATION('o', 2)),\
+	FST::NODE(1, FST::RELATION('i', 3)),\
+	FST::NODE(1, FST::RELATION('d', 4)),\
+	FST::NODE()
 
 #define FST_FUNCTION 5,	\
 	FST::NODE(1, FST::RELATION('f', 1)),\
@@ -113,7 +119,7 @@
 	FST::NODE()
 
 #define FST_STRLIT 4,	\
-	FST::NODE(2, FST::RELATION('\'', 1), FST::RELATION('\'', 2)),\
+	FST::NODE(2, FST::RELATION('"', 1), FST::RELATION('"', 2)),\
 	FST::NODE(280,	\
 	FST::RELATION('a', 1), FST::RELATION('b', 1), FST::RELATION('c', 1), FST::RELATION('d', 1), FST::RELATION('e', 1), FST::RELATION('f', 1),\
 	FST::RELATION('g', 1), FST::RELATION('h', 1), FST::RELATION('i', 1), FST::RELATION('j', 1), FST::RELATION('k', 1), FST::RELATION('l', 1),\
@@ -173,7 +179,7 @@
 	FST::RELATION('×', 2), FST::RELATION('Ø', 2), FST::RELATION('Ù', 2), FST::RELATION('Ú', 2), FST::RELATION('Û', 2), FST::RELATION('Ü', 2), \
 	FST::RELATION('Ý', 2), FST::RELATION('Þ', 2), FST::RELATION('ß', 2)), \
 	\
-	FST::NODE(1, FST::RELATION('\'', 3)),\
+	FST::NODE(1, FST::RELATION('"', 3)),\
 	FST::NODE()
 
 #define FST_OPERATOR 2,	\
