@@ -38,7 +38,8 @@ namespace LT
 		fout.open(parm.out, std::ios::app);//ios::app - дописыввать в конец файла
 		if (!fout.is_open())
 			throw ERROR_THROW(110);
-		fout << "01 ";
+		fout << "\n--------------------------------------";
+		fout << "\n01 ";
 
 		int number = 1;
 		for (int i = 0; i < lextable.size; i++)
