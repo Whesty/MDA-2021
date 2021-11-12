@@ -18,6 +18,11 @@
 	FST::NODE(1, FST::RELATION('i', 3)),\
 	FST::NODE(1, FST::RELATION('n', 4)),\
 	FST::NODE()
+#define FST_FOR 4,	\
+	FST::NODE(1, FST::RELATION('f', 1)),\
+	FST::NODE(1, FST::RELATION('o', 2)),\
+	FST::NODE(1, FST::RELATION('r', 3)),\
+	FST::NODE()
 #define FST_VOID 5,	\
 	FST::NODE(1, FST::RELATION('v', 1)),\
 	FST::NODE(1, FST::RELATION('o', 2)),\
@@ -47,7 +52,14 @@
 	FST::NODE(1, FST::RELATION('n', 3)),\
 	FST::NODE(1, FST::RELATION('o', 4)),\
 	FST::NODE(1, FST::RELATION('u', 5)),\
-	FST::NODE(1, FST::RELATION('5', 6)),\
+	FST::NODE(1, FST::RELATION('t', 6)),\
+	FST::NODE()
+#define FST_RUIN 5,	\
+	FST::NODE(1, FST::RELATION('r', 1)),\
+	FST::NODE(1, FST::RELATION('a', 2)),\
+	FST::NODE(1, FST::RELATION('n', 3)),\
+	FST::NODE(1, FST::RELATION('i', 4)),\
+	FST::NODE(1, FST::RELATION('n', 5)),\
 	FST::NODE()
 
 #define FST_MAIN 5,	\

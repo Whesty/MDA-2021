@@ -10,6 +10,13 @@ main ()
 	a = a + b;
 
 	if: a<w 
-	a = a + w;
-	^ w = a + w;
+	a = w - a;
+	^ a = w - a;
+
+	for: a<w
+	{
+	 a = a + 1;
+	}
+	runout a;
+	fr(t, b);
 }

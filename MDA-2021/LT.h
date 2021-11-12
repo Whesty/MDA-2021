@@ -8,7 +8,9 @@
 #define LEX_LITERAL		'l'	// лексема для литерала
 #define LEX_FUNCTION	'f'	// лексема для function
 #define LEX_RETURN		'r'	// лексема для return
-#define LEX_PRINT		'p'	// лексема для print
+#define LEX_RUNOUT		'p'	// лексема для runout
+#define LEX_RUNIN		'n'	// лексема для runin
+#define LEX_FOR			'o'	// лексема для for
 #define LEX_MAIN		'm'	// лексема для main
 #define LEX_SEMICOLON	';'	// лексема для ;
 #define LEX_TWOPOINT	':'	// лексема для :
@@ -30,7 +32,7 @@
 #define LEX_EQUAL		'='
 #define LEX_ROOF		'^'
 #define LEX_IF			'w' // лексема уловия
-#define LEX_VOID		'd' // лексема void
+#define LEX_VOID		't' // лексема void
 
 namespace LT		// таблица лексем
 {
