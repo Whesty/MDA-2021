@@ -46,17 +46,17 @@
 	FST::NODE(1, FST::RELATION('n', 6)),\
 	FST::NODE()
 
-#define FST_RUNOUT 6,	\
+#define FST_RUNOUT 7,	\
 	FST::NODE(1, FST::RELATION('r', 1)),\
-	FST::NODE(1, FST::RELATION('a', 2)),\
+	FST::NODE(1, FST::RELATION('u', 2)),\
 	FST::NODE(1, FST::RELATION('n', 3)),\
 	FST::NODE(1, FST::RELATION('o', 4)),\
 	FST::NODE(1, FST::RELATION('u', 5)),\
 	FST::NODE(1, FST::RELATION('t', 6)),\
 	FST::NODE()
-#define FST_RUIN 5,	\
+#define FST_RUNIN 6,	\
 	FST::NODE(1, FST::RELATION('r', 1)),\
-	FST::NODE(1, FST::RELATION('a', 2)),\
+	FST::NODE(1, FST::RELATION('u', 2)),\
 	FST::NODE(1, FST::RELATION('n', 3)),\
 	FST::NODE(1, FST::RELATION('i', 4)),\
 	FST::NODE(1, FST::RELATION('n', 5)),\
@@ -110,12 +110,7 @@
 	FST::RELATION('7', 1), FST::RELATION('8', 1), FST::RELATION('9', 1), FST::RELATION('0', 1)),\
 	FST::NODE()
 
-/*
-	FST::RELATION('A', 1), FST::RELATION('B', 1), FST::RELATION('C', 1), FST::RELATION('D', 1), FST::RELATION('E', 1), FST::RELATION('F', 1),\
-	FST::RELATION('G', 1), FST::RELATION('H', 1), FST::RELATION('I', 1), FST::RELATION('J', 1), FST::RELATION('K', 1), FST::RELATION('L', 1),\
-	FST::RELATION('M', 1), FST::RELATION('N', 1), FST::RELATION('O', 1), FST::RELATION('P', 1), FST::RELATION('Q', 1), FST::RELATION('R', 1),\
-	FST::RELATION('S', 1), FST::RELATION('T', 1), FST::RELATION('U', 1), FST::RELATION('V', 1), FST::RELATION('W', 1), FST::RELATION('X', 1),\
-	FST::RELATION('Y', 1), FST::RELATION('Z', 1),*/
+
 #define FST_INT16LIT 5,	\
 	FST::NODE(1, FST::RELATION('1', 1)),\
 	FST::NODE(1, FST::RELATION('6', 2)),\
@@ -242,7 +237,7 @@
 	FST::NODE(1, FST::RELATION('=', 1)),\
 	FST::NODE()
 #define FST_LOGOPERATOR 2,  \
-	FST::NODE(4, FST::RELATION('<', 1), FST::RELATION('>', 1), FST::RELATION('&', 1), FST::RELATION('!', 1)), \
+	FST::NODE(4, FST::RELATION('<', 1), FST::RELATION('>', 1), FST::RELATION('!', 1), FST::RELATION('~', 1)), \
 	FST::NODE()
 #define FST_SMALL 2, \
 	FST::NODE(1, FST::RELATION('<', 1)), \
@@ -255,6 +250,9 @@
 	FST::NODE()
 #define FST_EXCL 2, \
 	FST::NODE(1, FST::RELATION('!', 1)), \
+	FST::NODE()
+#define FST_TILDA 2, \
+	FST::NODE(1, FST::RELATION('~', 1)), \
 	FST::NODE()
 #define FST_ROOF 2, \
 	FST::NODE(1, FST::RELATION('^', 1)), \

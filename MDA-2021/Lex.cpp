@@ -103,8 +103,8 @@ namespace Lex {
 				LT::Add(lextable, entryLT);
 				continue;
 			}
-			FST::FST fstPrint(word[i], FST_RUNOUT);
-			if (FST::execute(fstPrint))
+			FST::FST fstRunin(word[i], FST_RUNIN);
+			if (FST::execute(fstRunin))
 			{
 				LT::Entry entryLT = writeEntry(entryLT, LEX_RUNIN, LT_TI_NULLIDX, line);
 				LT::Add(lextable, entryLT);
@@ -365,6 +365,20 @@ namespace Lex {
 			if (FST::execute(fstEqual))
 			{
 				LT::Entry entryLT = writeEntry(entryLT, LEX_EQUAL, LT_TI_NULLIDX, line);
+				LT::Add(lextable, entryLT);
+				continue;
+			}
+			FST::FST fstAnd(word[i], FST_AND);
+			if (FST::execute(fstAnd))
+			{
+				LT::Entry entryLT = writeEntry(entryLT, LEX_AND, LT_TI_NULLIDX, line);
+				LT::Add(lextable, entryLT);
+				continue;
+			}
+			FST::FST fstTilda(word[i], FST_TILDA);
+			if (FST::execute(fstEqual))
+			{
+				LT::Entry entryLT = writeEntry(entryLT, LEX_TILDA, LT_TI_NULLIDX, line);
 				LT::Add(lextable, entryLT);
 				continue;
 			}

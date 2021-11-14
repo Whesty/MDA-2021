@@ -21,5 +21,4 @@
 #include "FST.h"
 #include "PN.h"
 #include "Greibach.h"
-#include "Rule.h"
 #include "MFST.h"
