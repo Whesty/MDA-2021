@@ -7,6 +7,9 @@
 #define STAR '*'
 #define DIRSLASH '/'
 #define EQUAL '='
+#define MAX_BANGOU 2147483647
+#define MIN_BANGOU -2147483647
+#define MAX_RAIN 256
 #include "FST_def.h"
 #include <regex>
 #include "Lex.h"
@@ -140,7 +143,8 @@ namespace Lex {
 			// Если это индитификатор (любое слово состоящие из букс цифр и знака подчеркивание)
 			FST::FST fstIdentif(word[i], FST_ID);
 			if (FST::execute(fstIdentif)) {
-
+				int length = _mbslen(word[i]);
+				if (length > 5) throw ERROR_THROW_IN(201, line, position);
 				if (findFunc) {// Если до этого была лексема функции то это индитификатор функции
 					int idx = IT::IsId(idtable, word[i]);// Поиск функции в таблицы индентификаторов
 					if (idx != TI_NULLIDX) {
@@ -202,6 +206,7 @@ namespace Lex {
 			FST::FST fstLiteralInt(word[i], FST_INTLIT);
 			if (FST::execute(fstLiteralInt)) {
 				int value = atoi((char*)word[i]);
+				if(value > MAX_BANGOU) throw ERROR_THROW_IN(201, line, position);
 				for (int k = 0; k < idtable.size; k++) {//Если значение было заданно раньше то добавляем её из таблицы индитифакоторов в таблицу лексем
 					if (idtable.table[k].value.vint == value && idtable.table[k].idtype == IT::L) {
 						LT::Entry entryLT = LT::writeEntry(entryLT, LEX_LITERAL, k, line);
@@ -227,6 +232,8 @@ namespace Lex {
 			// Литерал число в 16bit
 			FST::FST fstLiteralInt16(word[i], FST_INT16LIT);
 			if (FST::execute(fstLiteralInt16)) {
+				int value1 = atoi((char*)word[i]);
+				if (value1 > MAX_BANGOU) throw ERROR_THROW_IN(202, line, position);
 				unsigned char* value = word[i];
 				for (int k = 0; k < idtable.size; k++) {//Если значение было заданно раньше то добавляем её из таблицы индитифакоторов в таблицу лексем
 					if (idtable.table[k].value.vstr.str == value && idtable.table[k].idtype == IT::L) {
@@ -256,6 +263,7 @@ namespace Lex {
 			if (FST::execute(fstLiteralString)) {
 
 				int length = _mbslen(word[i]);// Избавляемся от ковычек
+				if(length > MAX_RAIN) throw  ERROR_THROW_IN(202, line, position);
 				for (int k = 0; k < length; k++)
 					word[i][k] = word[i][k + 1];
 				word[i][length - 2] = 0;
@@ -399,7 +407,7 @@ namespace Lex {
 					indexLex--;
 					continue;
 				}
-			throw ERROR_THROW_IN(113, line, position);
+			throw ERROR_THROW_IN(201, line, position);
 		}
 		lex.idtable = idtable;
 		lex.lextable = lextable;

@@ -12,7 +12,6 @@ main
 
 	if: a<w 
 	a = w - a;
-	^ a = w - a;
 
 	for: a<w
 	{
