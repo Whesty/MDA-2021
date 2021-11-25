@@ -144,7 +144,7 @@ namespace Lex {
 			FST::FST fstIdentif(word[i], FST_ID);
 			if (FST::execute(fstIdentif)) {
 				int length = _mbslen(word[i]);
-				if (length > 5) throw ERROR_THROW_IN(201, line, position);
+				if (length > 5) throw ERROR_THROW_IN(202, line, position);
 				if (findFunc) {// Если до этого была лексема функции то это индитификатор функции
 					int idx = IT::IsId(idtable, word[i]);// Поиск функции в таблицы индентификаторов
 					if (idx != TI_NULLIDX) {
@@ -181,7 +181,7 @@ namespace Lex {
 				}
 				else if (!findFunc) {//Если это не функция то индитификатор
 					entryIT.idtype = IT::V;
-					if(entryIT.iddatatype == IT::NUL) throw ERROR_THROW_IN(200, line, position);
+					//if(entryIT.iddatatype == IT::NUL) throw ERROR_THROW_IN(200, line, position);
 					if (entryIT.iddatatype == IT::INT)// Если ранее была лексема integer
 						entryIT.value.vint = TI_INT_DEFAULT;
 					else
@@ -207,6 +207,7 @@ namespace Lex {
 			if (FST::execute(fstLiteralInt)) {
 				int value = atoi((char*)word[i]);
 				if(value > MAX_BANGOU) throw ERROR_THROW_IN(201, line, position);
+				if(value < MIN_BANGOU) throw ERROR_THROW_IN(201, line, position);
 				for (int k = 0; k < idtable.size; k++) {//Если значение было заданно раньше то добавляем её из таблицы индитифакоторов в таблицу лексем
 					if (idtable.table[k].value.vint == value && idtable.table[k].idtype == IT::L) {
 						LT::Entry entryLT = LT::writeEntry(entryLT, LEX_LITERAL, k, line);
@@ -232,8 +233,8 @@ namespace Lex {
 			// Литерал число в 16bit
 			FST::FST fstLiteralInt16(word[i], FST_INT16LIT);
 			if (FST::execute(fstLiteralInt16)) {
-				int value1 = atoi((char*)word[i]);
-				if (value1 > MAX_BANGOU) throw ERROR_THROW_IN(202, line, position);
+				int length = _mbslen(word[i]);// Избавляемся от ковычек
+				if (length > 14) throw ERROR_THROW_IN(202, line, position);
 				unsigned char* value = word[i];
 				for (int k = 0; k < idtable.size; k++) {//Если значение было заданно раньше то добавляем её из таблицы индитифакоторов в таблицу лексем
 					if (idtable.table[k].value.vstr.str == value && idtable.table[k].idtype == IT::L) {

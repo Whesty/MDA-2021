@@ -12,12 +12,12 @@ main
 
 	if: a<w 
 	a = w - a;
+	^ a = w - a;
 
-	for: a<w
+	for: w-a<(w+a)
 	{
-	 a = a + 1;
+	 a = a + 1\(w+2);
 	}
 	runout a;
-	fr(t, b);
 	return;
 }

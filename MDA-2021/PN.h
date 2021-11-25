@@ -4,3 +4,4 @@
 bool PolishNotation(int lextable_pos, LT::LexTable& lextable, IT::IdTable idtable, int j);
 void preabr(LT::LexTable& lextable, IT::IdTable idtable);
 void ShowPN(LT::LexTable& lextable, IT::IdTable& idtable);
+bool prior(LT::Entry i, LT::Entry j);

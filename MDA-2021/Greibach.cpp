@@ -46,21 +46,22 @@ namespace GRB {
 		Rule(
 			NS('B'),
 			GRB_ERROR_SERIES + 6,    // конструкции условия
-			9,                               // 
+			10,                               // 
 			Rule::Chain(5, TS('t'), TS('i'), TS('='), NS('E'), TS(';')),
 			Rule::Chain(4, TS('i'), TS('='), NS('E'), TS(';')),
 			Rule::Chain(3, TS('p'), NS('E'), TS(';')),
 			Rule::Chain(3, TS('t'), TS('i'), TS(';')),
 			Rule::Chain(3, TS('p'), TS('i'), TS(';')),
 			Rule::Chain(3, TS('p'), TS('l'), TS(';')),
-			Rule::Chain(6, TS('w'), TS(':'), NS('I'), TS('{'), NS('N'), TS('}')),
+			Rule::Chain(4, TS('w'), TS(':'), NS('I'), NS('X')),
 			Rule::Chain(4, TS('o'), TS(':'), NS('I'), NS('O')),
-			Rule::Chain(6, TS('o'), TS(':'), NS('I'), TS('{'), NS('N'), TS('}'))
+			Rule::Chain(5, TS('w'), TS(':'), NS('I'), NS('X'), NS('N')),
+			Rule::Chain(5, TS('o'), TS(':'), NS('I'), NS('O'), NS('N'))
 		),
 		Rule(
 			NS('X'),
 			GRB_ERROR_SERIES + 6,    // конструкции условия
-			22,                               // 
+			20,                               // 
 			Rule::Chain(5, TS('{'), NS('N'), TS('}'), TS('^'), NS('B')),
 			Rule::Chain(7, TS('{'), NS('N'), TS('}'), TS('^'), TS('{'), NS('N'), TS('}')),
 			Rule::Chain(3, TS('{'), NS('N'), TS('}')),
@@ -71,24 +72,22 @@ namespace GRB {
 			Rule::Chain(3, TS('t'), TS('i'), TS(';')),
 			Rule::Chain(3, TS('p'), TS('i'), TS(';')),
 			Rule::Chain(3, TS('p'), TS('l'), TS(';')),
-			Rule::Chain(6, TS('w'), TS(':'), NS('I'), TS('{'), NS('N'), TS('}')),
-			Rule::Chain(4, TS('o'), TS(':'), NS('I'), NS('O')),
-			Rule::Chain(6, TS('o'), TS(':'), NS('I'), TS('{'), NS('N'), TS('}')),
 			Rule::Chain(7, TS('t'), TS('i'), TS('='), NS('E'), TS(';'), TS('^'), NS('B')),
 			Rule::Chain(6, TS('i'), TS('='), NS('E'), TS(';'), TS('^'), NS('B')),
 			Rule::Chain(5, TS('p'), NS('E'), TS(';'), TS('^'), NS('B')),
 			Rule::Chain(5, TS('t'), TS('i'), TS(';'), TS('^'), NS('B')),
 			Rule::Chain(5, TS('p'), TS('i'), TS(';'), TS('^'), NS('B')),
 			Rule::Chain(5, TS('p'), TS('l'), TS(';'), TS('^'), NS('B')),
-			Rule::Chain(8, TS('w'), TS(':'), NS('I'), TS('{'), NS('N'), TS('}'), TS('^'), NS('B')),
+			Rule::Chain(5, TS('{'), NS('N'), TS('}'), TS('^'), NS('B')),
+			Rule::Chain(4, TS('w'), TS(':'), NS('I'), NS('X')),
 			Rule::Chain(4, TS('o'), TS(':'), NS('I'), NS('O')),
-			Rule::Chain(8, TS('o'), TS(':'), NS('I'), TS('{'), NS('N'), TS('}'), TS('^'), NS('B')),
-			Rule::Chain(5, TS('{'), NS('N'), TS('}'), TS('^'), NS('B'))
+			Rule::Chain(5, TS('w'), TS(':'), NS('I'), NS('X'), NS('N')),
+			Rule::Chain(5, TS('o'), TS(':'), NS('I'), NS('O'), NS('N'))
 		),
 		Rule(
 			NS('O'),
 			GRB_ERROR_SERIES + 7,    
-			10,                               // цикл
+			11,                               // цикл
 										 // 
 			Rule::Chain(5, TS('t'), TS('i'), TS('='), NS('E'), TS(';')),
 			Rule::Chain(4, TS('i'), TS('='), NS('E'), TS(';')),
@@ -96,9 +95,10 @@ namespace GRB {
 			Rule::Chain(3, TS('t'), TS('i'), TS(';')),
 			Rule::Chain(3, TS('p'), TS('i'), TS(';')),
 			Rule::Chain(3, TS('p'), TS('l'), TS(';')),
-			Rule::Chain(6, TS('w'), TS(':'), NS('I'), TS('{'), NS('N'), TS('}')),
+			Rule::Chain(4, TS('w'), TS(':'), NS('I'), NS('X')),
 			Rule::Chain(4, TS('o'), TS(':'), NS('I'), NS('O')),
-			Rule::Chain(6, TS('o'), TS(':'), NS('I'), TS('{'), NS('N'), TS('}')),
+			Rule::Chain(5, TS('w'), TS(':'), NS('I'), NS('X'), NS('N')),
+			Rule::Chain(5, TS('o'), TS(':'), NS('I'), NS('O'), NS('N')),
 			Rule::Chain(3, TS('{'), NS('N'), TS('}'))
 		),
 		Rule(
@@ -140,15 +140,23 @@ namespace GRB {
 		Rule(
 			NS('I'),
 			GRB_ERROR_SERIES + 6,    // условие
-			8,                  //
-			Rule::Chain(3, TS('i'), TS('q'), TS('i')),
-			Rule::Chain(3, TS('l'), TS('q'), TS('l')),
-			Rule::Chain(3, TS('i'), TS('q'), TS('l')),
-			Rule::Chain(3, TS('l'), TS('q'), TS('i')),
-			Rule::Chain(5, TS('i'), TS('q'), TS('i'), TS('&'), NS('I')),
-			Rule::Chain(5, TS('l'), TS('q'), TS('l'), TS('&'), NS('I')),
-			Rule::Chain(5, TS('i'), TS('q'), TS('l'), TS('&'), NS('I')),
-			Rule::Chain(5, TS('l'), TS('q'), TS('i'), TS('&'), NS('I'))
+			16,                  //
+			Rule::Chain(3, TS('i'), TS('q'), NS('E') ),
+			Rule::Chain(3, TS('l'), TS('q'), NS('E')),
+			Rule::Chain(4, TS('('), NS('E'), TS(')'), TS('q'), NS('E')),
+			Rule::Chain(6, TS('i'), TS('('), NS('W'), TS(')'), TS('q'), NS('E')),
+			Rule::Chain(4, TS('i'), NS('M'), TS('q'), NS('E')),
+			Rule::Chain(4, TS('l'), NS('M'), TS('q'), NS('E')),
+			Rule::Chain(6, TS('('), NS('E'), TS(')'), NS('M'), TS('q'), NS('E')),
+			Rule::Chain(7, TS('i'), TS('('), NS('W'), TS(')'), NS('M'), TS('q'), NS('E')),
+			Rule::Chain(3, TS('i'), TS('q'), NS('E'), TS('&'), NS('I')),
+			Rule::Chain(3, TS('l'), TS('q'), NS('E'), TS('&'), NS('I')),
+			Rule::Chain(7, TS('('), NS('E'), TS(')'), TS('q'), NS('E'), TS('&'), NS('I')),
+			Rule::Chain(9, TS('i'), TS('('), NS('W'), TS(')'), TS('q'), NS('E'), TS('&'), NS('I')),
+			Rule::Chain(7, TS('i'), NS('M'), TS('q'), NS('E'), TS('&'), NS('I')),
+			Rule::Chain(7, TS('l'), NS('M'), TS('q'), NS('E'), TS('&'), NS('I')),
+			Rule::Chain(9, TS('('), NS('E'), TS(')'), NS('M'), TS('q'), NS('E'), TS('&'), NS('I')),
+			Rule::Chain(10, TS('i'), TS('('), NS('W'), TS(')'), NS('M'), TS('q'), NS('E'), TS('&'), NS('I'))
 		)
 	);
 	Rule::Chain::Chain(short psize, GRBALPHABET s, ...)

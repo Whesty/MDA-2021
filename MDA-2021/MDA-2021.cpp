@@ -16,11 +16,13 @@ int wmain(int argc, wchar_t* argv[]) {
 		Lex::LEX lex = Lex::lexAnaliz(log, in);
 		LT::showTable(lex.lextable, parm);
 		IT::showITable(lex.idtable, parm);
-		ShowPN(lex.lextable, lex.idtable);
 		MFST::Mfst mfst(lex.lextable, GRB::getGreibach());//Автомат
 		mfst.start(); //Старт синтаксического анализа
 		mfst.savededucation(); // Сохранить вывести правила вывода
 		mfst.printrules(); // Отладка: вывести правила вывода
+
+		preabr(lex.lextable, lex.idtable);
+		ShowPN(lex.lextable, lex.idtable);
 		Log::Close(log);
 		return 0;
 	}
