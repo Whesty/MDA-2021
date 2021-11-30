@@ -13,10 +13,10 @@ main
 	if: a<w 
 	a = w - a;
 	^ a = w - a;
-
+	fr();
 	for: w-a<(w+a)
 	{
-	 a = a + 1\(w+2);
+	 a = a + q\(w+2);
 	}
 	runout a;
 	return;

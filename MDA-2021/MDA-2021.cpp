@@ -15,14 +15,14 @@ int wmain(int argc, wchar_t* argv[]) {
 		Log::WriteIn(log, in);
 		Lex::LEX lex = Lex::lexAnaliz(log, in);
 		LT::showTable(lex.lextable, parm);
-		IT::showITable(lex.idtable, parm);
+		IT::showITable(lex.idtable, log);
 		MFST::Mfst mfst(lex.lextable, GRB::getGreibach());//Автомат
-		mfst.start(); //Старт синтаксического анализа
-		mfst.savededucation(); // Сохранить вывести правила вывода
-		mfst.printrules(); // Отладка: вывести правила вывода
-
-		preabr(lex.lextable, lex.idtable);
-		ShowPN(lex.lextable, lex.idtable);
+		//mfst.start(); //Старт синтаксического анализа
+		//mfst.savededucation(); // Сохранить вывести правила вывода
+		//mfst.printrules(); // Отладка: вывести правила вывода
+		if (Sem::SemAnaliz(lex.lextable, lex.idtable, log)) cout << "Сематичский анализ выполнен без ошибок";
+		//preabr(lex.lextable, lex.idtable);
+		//ShowPN(lex.lextable, lex.idtable);
 		Log::Close(log);
 		return 0;
 	}

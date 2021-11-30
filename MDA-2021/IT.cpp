@@ -34,45 +34,43 @@ namespace IT {
 
 	}
 
-	void showITable(IdTable& table, Parm::PARM parm)
+	void showITable(IdTable& table, Log::LOG log)
 	{
-		std::fstream flog;
-		flog.open(parm.log, std::ios::app);//ios::app - дописыввать в конец файла
-		if (!flog.is_open())
-		throw ERROR_THROW(110);
-		flog << "№     | Имя        | тип данных | тип индитификатора  | первое вхождение | содержание " << endl;
+		//std::fstream *log.stream;
+		//*log.stream.open(parm.log, std::ios::app);//ios::app - дописыввать в конец файла
+		*log.stream << "№     | Имя        | тип данных | тип индитификатора  | первое вхождение | содержание " << endl;
 		for (int i = 0; i < table.size; i++) {
-			flog << setw(6) << left <<i + 1  << "| ";
-			flog << setw(11) << left << table.table[i].id << "| ";
-			if (table.table[i].idtype == OP || table.table[i].idtype == LO) flog << setw(10) << left << "-" << " | ";
+			*log.stream << setw(6) << left <<i + 1  << "| ";
+			*log.stream << setw(11) << left << table.table[i].id << "| ";
+			if (table.table[i].idtype == OP || table.table[i].idtype == LO) *log.stream << setw(10) << left << "-" << " | ";
 			else
 				if (table.table[i].iddatatype == INT) {
-					flog << setw(10) << left << "bangou" << " | ";
+					*log.stream << setw(10) << left << "bangou" << " | ";
 				}
-				else if (table.table[i].iddatatype == STR)  flog << setw(10) << left << "rain" << " | ";
-				else if (table.table[i].iddatatype == VOI) flog << setw(10) << left << "void" << " | ";
-				else flog << setw(10) << left << "bangou(16)" << " | ";
+				else if (table.table[i].iddatatype == STR)  *log.stream << setw(10) << left << "rain" << " | ";
+				else if (table.table[i].iddatatype == VOI) *log.stream << setw(10) << left << "void" << " | ";
+				else *log.stream << setw(10) << left << "bangou(16)" << " | ";
 			switch (table.table[i].idtype)
 			{
-			case L: {flog << setw(19) << left << "Литерал" << " | "; break; }
-			case V: {flog << setw(19) << left << "Переменная" << " | "; break; }
-			case P: {flog << setw(19) << left << "Параметр" << " | "; break; }
-			case F: {flog << setw(19) << left << "Функция" << " | "; break; }
-			case OP: {flog << setw(19) << left << "Оператор" << " | "; break; }
-			case LO: {flog << setw(19) << left << "Логический оператор" << " | "; break; }
+			case L: {*log.stream << setw(19) << left << "Литерал" << " | "; break; }
+			case V: {*log.stream << setw(19) << left << "Переменная" << " | "; break; }
+			case P: {*log.stream << setw(19) << left << "Параметр" << " | "; break; }
+			case F: {*log.stream << setw(8) << left << "Функция " << setw(11) << right << table.table->parm << " | "; break; }
+			case OP: {*log.stream << setw(19) << left << "Оператор" << " | "; break; }
+			case LO: {*log.stream << setw(19) << left << "Логический оператор" << " | "; break; }
 			default:
 				break;
 			}
-			flog << setw(16) << left << table.table[i].idxfirstLE << " | ";
+			*log.stream << setw(16) << left << table.table[i].idxfirstLE << " | ";
 			if (table.table[i].idtype == L) {
 				if (table.table[i].iddatatype == INT) {
-					flog << table.table[i].value.vint;
+					*log.stream << table.table[i].value.vint;
 				}
-				else if (table.table[i].iddatatype == STR) flog << '[' << table.table[i].value.vstr.len << ']' << table.table[i].value.vstr.str;
-				else if (table.table[i].iddatatype == INT16) flog << table.table[i].value.vstr.str;
+				else if (table.table[i].iddatatype == STR) *log.stream << '[' << table.table[i].value.vstr.len << ']' << table.table[i].value.vstr.str;
+				else if (table.table[i].iddatatype == INT16) *log.stream << table.table[i].value.vstr.str;
 			}
-			else flog << "-";
-			flog << endl;
+			else *log.stream << "-";
+			*log.stream << endl;
 		}
 	}
 

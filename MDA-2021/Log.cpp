@@ -84,7 +84,7 @@ namespace Log {
 		if (log.stream)
 		{
 			*log.stream << "\nОшибка " << error.id << ": " << error.message << " Строка " << error.inext.line << " позиция " << error.inext.col << endl;
-			Close(log);
+			//Close(log);
 		}
 			cout << "\nОшибка " << error.id << ": " << error.message << " Строка " << error.inext.line << " позиция " << error.inext.col << endl;
 	}

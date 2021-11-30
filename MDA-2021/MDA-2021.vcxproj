@@ -151,6 +151,9 @@
     <ClCompile Include="MFST.cpp" />
     <ClCompile Include="Parm.cpp" />
     <ClCompile Include="PN.cpp" />
+    <ClCompile Include="Sem.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Level2</WarningLevel>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Error.h" />
@@ -166,6 +169,7 @@
     <ClInclude Include="Parm.h" />
     <ClInclude Include="PN.h" />
     <ClInclude Include="Rule.h" />
+    <ClInclude Include="Sem.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>

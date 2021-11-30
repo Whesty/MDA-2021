@@ -14,13 +14,13 @@ bool PolishNotation(int lextable_pos, LT::LexTable& lextable, IT::IdTable idtabl
 	{
 		if (lextable.table[i].sn == lextable_pos || lextable.table[i].lexema=='&') {
 			if ((lextable.table[i].lexema == LEX_OPERATOR) || (lextable.table[i].lexema == LEX_LEFTTHESIS) || (lextable.table[i].lexema == LEX_COMMA)) {
-				cout << "stek + " << lextable.table[i].lexema << " size " << idstek << endl;
+				//cout << "stek + " << lextable.table[i].lexema << " size " << idstek << endl;
 
 				stek[idstek++] = lextable.table[i];
 			}
 			else { 
 				if (lextable.table[i].lexema == LEX_RIGHTTHESIS || lextable.table[i].lexema ==LEX_SEMICOLON || lextable.table[i].lexema == LEX_LOGOPERATOR) {
-					cout << comma << " " << idstek << " выгрузка из стека:\n";
+					//cout << comma << " " << idstek << " выгрузка из стека:\n";
 					
 					idstek--;
 					while (idstek >= 0) {
@@ -41,7 +41,7 @@ bool PolishNotation(int lextable_pos, LT::LexTable& lextable, IT::IdTable idtabl
 							idstek--; continue;
 						}
 						else {
-							cout << "slex + " << stek[idstek].lexema << " size " << idlex << endl;
+							//cout << "slex + " << stek[idstek].lexema << " size " << idlex << endl;
 							lextable.table[idlex++] = stek[idstek--];
 							//if(prior(stek[idstek], lextable.table[idlex])) continue;
 						}
@@ -53,7 +53,7 @@ bool PolishNotation(int lextable_pos, LT::LexTable& lextable, IT::IdTable idtabl
 					}continue;
 					idstek = 0;
 				}
-				cout << "lex + " << lextable.table[i].lexema << " size " << idlex << endl;
+				//cout << "lex + " << lextable.table[i].lexema << " size " << idlex << endl;
 				if(r)comma++;
 				if (lextable.table[i].lexema == LEX_ID && idtable.table[lextable.table[i].idxTI].idtype == 2) {
 					r = true;

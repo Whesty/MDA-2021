@@ -34,14 +34,14 @@
 #define LEX_ROOF		'^'
 #define LEX_IF			'w' // лексема уловия
 #define LEX_VOID		'n' // лексема void
-
+#define TI_NULLIDX		0xffffffff
 namespace LT		// таблица лексем
 {
 	struct Entry	// строка таблицы лексем
 	{
 		unsigned char lexema;	// лексема
 		int sn;					// номер строки в исходном тексте
-		int idxTI;				// индекс в таблице идентификаторов или LT_TI_NULLIDX
+		int idxTI = TI_NULLIDX;				// индекс в таблице идентификаторов или LT_TI_NULLIDX
 		int comm;
 	};
 

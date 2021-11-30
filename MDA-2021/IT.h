@@ -6,9 +6,10 @@
 #define TI_NULLIDX		0xffffffff	// нет элкмента таблицы идентификаторов
 #define TI_STR_MAXSIZE	255			// 
 #include "Parm.h"
+#include "Log.h"
 namespace IT			// таблица идентификаторов
 {
-	enum IDDATATYPE { INT = 1, STR = 2, INT16 = 3, NUL = 6, VOI = 4, CHR = 5 };			// типы данных идентификаторов: integer, string
+	enum IDDATATYPE { INT = 1, STR = 2, INT16 = 3, NUL = 6, VOI = 4, CHR = 5 };			// типы данных идентификаторов: integer, string, int16bit, без типпа данных, процедура, символ
 	enum IDTYPE { V = 1, F = 2, P = 3, L = 4, OP = 5, LO = 6 };	// типы идентификаторов: переменная, функция, параметр, литерал, оператор
 
 	struct Entry	// строка таблицы идентификаторов
@@ -17,6 +18,7 @@ namespace IT			// таблица идентификаторов
 		unsigned char	id[ID_MAXSIZE];		// индентификатор (автоматически усекается до ID_MAXSIZE)
 		IDDATATYPE	iddatatype = NUL;			// тип данных
 		IDTYPE		idtype;				// тип идентификатора
+		int parm = 0;
 		union
 		{
 			int vint;					// значение integer
@@ -55,5 +57,5 @@ namespace IT			// таблица идентификаторов
 
 	void Delete(IdTable& idtable);	// удалить таблицу лексем (освободить память)
 
-	void showITable(IdTable& table, Parm::PARM parm);	// вывод таблицы лексем
+	void showITable(IdTable& table, Log::LOG log);	// вывод таблицы лексем
 };

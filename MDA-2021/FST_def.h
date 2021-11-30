@@ -190,7 +190,7 @@
 	FST::NODE()
 
 #define FST_OPERATOR 2,	\
-	FST::NODE(4, FST::RELATION('+', 1), FST::RELATION('-', 1), FST::RELATION('*', 1), FST::RELATION('\\', 1)),\
+	FST::NODE(4, FST::RELATION('+', 1), FST::RELATION('-', 1), FST::RELATION('*', 1), FST::RELATION('\\', 1), FST::RELATION('%', 1)), \
 	FST::NODE()
 
 #define FST_PLUS 2,	\
@@ -265,7 +265,6 @@
 	FST::NODE(1, FST::RELATION('i', 1)), \
 	FST::NODE(1, FST::RELATION('f', 2)), \
 	FST::NODE()
-
 
 
 #pragma endregion

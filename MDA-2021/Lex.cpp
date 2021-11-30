@@ -23,7 +23,7 @@ namespace Lex {
 		int i = 0;
 		int line = 1;
 		int indexLex = 0;
-		int indexID = 1;
+		int indexID = 0;
 		int countLit = 1;
 		int position = 0;
 
@@ -32,6 +32,8 @@ namespace Lex {
 		bool findFunc = false;
 		bool findParm = false;
 		bool findSameID = false;
+		int Idx_Func_IT = 0;
+		int Parm_count_IT = 0;
 
 		unsigned char* RegionPrefix = new unsigned char[10]{ "" };
 		unsigned char* buferRegionPrefix = new unsigned char[10]{ "" };
@@ -83,6 +85,9 @@ namespace Lex {
 
 				entryIT.idtype = IT::F;
 				findFunc = true;
+				findParm = true;
+				Parm_count_IT = 0;
+				Idx_Func_IT = 0;
 				continue;
 			}
 			FST::FST fstReturn(word[i], FST_RETURN);
@@ -176,8 +181,9 @@ namespace Lex {
 				// Если ничего из выше перечисленного не было заданно
 				LT::Entry entryLT = LT::writeEntry(entryLT, LEX_ID, indexID++, line);// Задаем в таблицу лексем
 				LT::Add(lextable, entryLT);
-				if (findParm) {// Если это параметр функии
+				if (findParm && !findFunc) {// Если это параметр функии
 					entryIT.idtype = IT::P;
+					Parm_count_IT++;
 				}
 				else if (!findFunc) {//Если это не функция то индитификатор
 					entryIT.idtype = IT::V;
@@ -198,6 +204,9 @@ namespace Lex {
 				entryIT.idxfirstLE = indexLex;
 				_mbscpy(entryIT.id, word[i]);// Имя индентификатора
 				IT::Add(idtable, entryIT);
+				if(findFunc)
+				Idx_Func_IT = IT::IsId(idtable, word[i]);
+
 				findFunc = false;
 				continue;
 			}
@@ -250,6 +259,7 @@ namespace Lex {
 				entryIT.iddatatype = IT::INT16;// Тип данных
 				entryIT.idtype = IT::L;// Тип индитификатора
 				_mbscpy(entryIT.value.vstr.str, word[i]); // Значение
+				entryIT.value.vint = IntinInt16(word[i]);
 				entryIT.idxfirstLE = indexLex;// Индекс первой лексемы
 				_itoa_s(countLit++, charCountLit, sizeof(char) * 10, 10);// Создание имени литерала ("L<порядковый номер литерала>")
 				_mbscpy(bufL, L);
@@ -366,7 +376,12 @@ namespace Lex {
 				{
 					_mbscpy(RegionPrefix, pastRegionPrefix);//предыдущую область видимости
 				}
+				if(findParm)
+				idtable.table[Idx_Func_IT].parm = Parm_count_IT;
 				findParm = false;
+				findParm = false;
+				Parm_count_IT = 0;
+				Idx_Func_IT = 0;
 				LT::Add(lextable, entryLT);
 				continue;
 			}
@@ -426,6 +441,25 @@ namespace Lex {
 			return 1;
 		else
 			return 0;
+	}
+
+	int IntinInt16(unsigned char* word)
+	{
+		int length = _mbslen(word);
+		for (int k = 0; k < length-2; k++)
+			word[k] = word[k + 3];
+		int id = 0;
+		int sum = 0;;
+		for (int k = length - 4; k >= 0; k--) {
+			int x = 0;
+			if (word[k] >= 'A' && word[k] <= 'F') {
+				x = abs('A' - word[k]) + 10;
+			}
+			else x = abs('0'- word[k]);
+			sum = sum + x * pow(16, id++);
+		}
+		
+		return sum;
 	}
 	
 }
