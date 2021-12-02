@@ -34,6 +34,7 @@ namespace Lex {
 		bool findSameID = false;
 		int Idx_Func_IT = 0;
 		int Parm_count_IT = 0;
+		int count_main = 0;
 
 		unsigned char* RegionPrefix = new unsigned char[10]{ "" };
 		unsigned char* buferRegionPrefix = new unsigned char[10]{ "" };
@@ -138,7 +139,7 @@ namespace Lex {
 			{
 				LT::Entry entryLT = writeEntry(entryLT, LEX_MAIN, LT_TI_NULLIDX, line);
 				LT::Add(lextable, entryLT);
-
+				count_main++;
 				// Вхождение в функцию main значит все заднные в ней индентификаторы должны иметь префикс
 				_mbscpy(pastRegionPrefix, RegionPrefix);
 				_mbscpy(RegionPrefix, word[i]);
@@ -187,7 +188,7 @@ namespace Lex {
 				}
 				else if (!findFunc) {//Если это не функция то индитификатор
 					entryIT.idtype = IT::V;
-					//if(entryIT.iddatatype == IT::NUL) throw ERROR_THROW_IN(200, line, position);
+					if(entryIT.iddatatype == IT::NUL) throw ERROR_THROW_IN(303, line, position);
 					if (entryIT.iddatatype == IT::INT)// Если ранее была лексема integer
 						entryIT.value.vint = TI_INT_DEFAULT;
 					else
@@ -215,8 +216,8 @@ namespace Lex {
 			FST::FST fstLiteralInt(word[i], FST_INTLIT);
 			if (FST::execute(fstLiteralInt)) {
 				int value = atoi((char*)word[i]);
-				if(value > MAX_BANGOU) throw ERROR_THROW_IN(201, line, position);
-				if(value < MIN_BANGOU) throw ERROR_THROW_IN(201, line, position);
+				if(value > MAX_BANGOU) throw ERROR_THROW_IN(202, line, position);
+				if(value < MIN_BANGOU) throw ERROR_THROW_IN(202, line, position);
 				for (int k = 0; k < idtable.size; k++) {//Если значение было заданно раньше то добавляем её из таблицы индитифакоторов в таблицу лексем
 					if (idtable.table[k].value.vint == value && idtable.table[k].idtype == IT::L) {
 						LT::Entry entryLT = LT::writeEntry(entryLT, LEX_LITERAL, k, line);
@@ -274,6 +275,7 @@ namespace Lex {
 			if (FST::execute(fstLiteralString)) {
 
 				int length = _mbslen(word[i]);// Избавляемся от ковычек
+				if(length==2)  WriteError(log, Error::geterrorin(310, line, position));
 				if(length > MAX_RAIN) throw  ERROR_THROW_IN(202, line, position);
 				for (int k = 0; k < length; k++)
 					word[i][k] = word[i][k + 1];
@@ -413,6 +415,14 @@ namespace Lex {
 					LT::Add(lextable, entryLT);
 					continue;
 			}
+			FST::FST fstLitStr_1(word[i], FST_LITERALSTRING_1);
+			if (FST::execute(fstTwoPoint))
+			{
+				LT::Entry entryLT = writeEntry(entryLT, word[i][0], LT_TI_NULLIDX, line);
+					LT::Add(lextable, entryLT);
+					WriteError(log, Error::geterrorin(311, line, position));
+					continue;
+			}
 
 
 
@@ -423,10 +433,12 @@ namespace Lex {
 					indexLex--;
 					continue;
 				}
-			throw ERROR_THROW_IN(201, line, position);
+			 WriteError(log, Error::geterrorin(201, line, position));
 		}
 		lex.idtable = idtable;
 		lex.lextable = lextable;
+		if(count_main>1) Log::WriteError(log, Error::geterror(302));
+		if(count_main==0) Log::WriteError(log, Error::geterror(301));
 		return lex;
 	}
 

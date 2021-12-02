@@ -116,18 +116,37 @@ bool Sem::SemAnaliz(LT::LexTable lextable, IT::IdTable idtable, Log::LOG log)
 							}
 							break; // нашли exit
 						}
-
+						if (k == lextable.size) break;
+					}
+				
+				}
+				else if (e.idtype == IT::IDTYPE::F && e.iddatatype == IT::IDDATATYPE::VOI) {
+					for (int k = i + 1; ; k++)
+					{
+						char l = lextable.table[k].lexema;
+						if (l == LEX_RETURN)
+						{
+							int next = lextable.table[k + 1].lexema; // след. за return
+								// тип функции и возвращаемого значения не совпадают
+								if (next != LEX_SEMICOLON)
+								{
+									Log::WriteError(log, Error::geterrorin(315, lextable.table[k].sn, 0));
+									sem_ok = false;
+									break;
+								}
+							break; // нашли exit
+						}
 						if (k == lextable.size) break;
 					}
 				}
 			}
 			if (lextable.table[i + 1].lexema == LEX_LEFTTHESIS && lextable.table[i - 1].lexema != LEX_FUNCTION) // именно вызов
 			{
-				if (e.idtype == IT::IDTYPE::F) // точно функция
+				if (e.idtype == IT::IDTYPE::F || e.iddatatype != IT::IDDATATYPE::VOI) // точно функция
 				{
 					int paramscount = NULL;
 					// проверка передаваемых параметров
-					for (int j = i + 1; j<= i+e.parm; j++)
+					for (int j = i + 1; lextable.table[j].lexema != LEX_RIGHTTHESIS; j++)
 					{
 						// проверка соответствия передаваемых параметров прототипам
 						if (lextable.table[j].lexema == LEX_ID || lextable.table[j].lexema == LEX_LITERAL)

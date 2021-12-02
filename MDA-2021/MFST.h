@@ -14,6 +14,10 @@ public:
 static int FST_TRACE_n = -1;
 static char rbuf[205], sbuf[205], lbuf[1024];
 
+#ifdef COUT_CONSOLE
+
+
+
 #define MFST_TRACE_START	std::cout << std::setw(5) << std::setfill(' ') << std::left << "Шаг" << ":"\
 							<< std::setw(30) << std::left << "Правило"\
 							<< std::setw(30) << std::left << "Входная лента"\
@@ -44,6 +48,7 @@ static char rbuf[205], sbuf[205], lbuf[1024];
 #define MFST_TRACE7			std::cout << std::setw(4) << std::left << state.lenta_position << ": "\
 							<< std::setw(20) << std::left << rule.getCRule(rbuf, state.nrulechain)\
 							<< std::endl;
+#endif // COUT_CONSOLE
 
 typedef my_stack_SHORT MFSTSTSTACK;
 namespace MFST {
