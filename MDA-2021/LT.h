@@ -34,6 +34,7 @@
 #define LEX_ROOF		'^'
 #define LEX_IF			'w' // лексема уловия
 #define LEX_VOID		'n' // лексема void
+#define LEX_ENDIF		'|' // Конец условия
 #define TI_NULLIDX		0xffffffff
 namespace LT		// таблица лексем
 {
@@ -74,7 +75,7 @@ namespace LT		// таблица лексем
 		int indx,
 		int line
 	);
-
+	void writeLexTable(std::ostream* stream, LT::LexTable& lextable);
 	void showTable(LexTable lextable, Parm::PARM parm);	// вывод таблицы лексем
 
 };

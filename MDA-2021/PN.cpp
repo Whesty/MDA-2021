@@ -1,175 +1,184 @@
-#include "PN.h"
-#include <iostream>
-#define LEX_COMMA2 '@'
+#include "stdafx.h"
+#include <cstring>
+
 using namespace std;
-bool PolishNotation(int lextable_pos, LT::LexTable& lextable, IT::IdTable idtable, int j) {
-	LT::Entry* stek = new LT::Entry[255];
-	int idstek = 0;
-	int idlex = j;
-	bool r = false;
-	int comma = 0;
-	int idx = 0;
-	/*cout << "1\n";*/
-	for (int i = j; i < lextable.size; i++)
+namespace Polish
+{
+	int  getPriority(LT::Entry& e, IT::IdTable idtable)
 	{
-		if (lextable.table[i].sn == lextable_pos || lextable.table[i].lexema=='&') {
-			if ((lextable.table[i].lexema == LEX_OPERATOR) || (lextable.table[i].lexema == LEX_LEFTTHESIS) || (lextable.table[i].lexema == LEX_COMMA)) {
-				//cout << "stek + " << lextable.table[i].lexema << " size " << idstek << endl;
-
-				stek[idstek++] = lextable.table[i];
-			}
-			else { 
-				if (lextable.table[i].lexema == LEX_RIGHTTHESIS || lextable.table[i].lexema ==LEX_SEMICOLON || lextable.table[i].lexema == LEX_LOGOPERATOR) {
-					//cout << comma << " " << idstek << " выгрузка из стека:\n";
-					
-					idstek--;
-					while (idstek >= 0) {
-						if (stek[idstek].lexema == LEX_LEFTTHESIS) {
-							if (r) {
-								lextable.table[idlex].comm = comma;
-								lextable.table[idlex].lexema = LEX_COMMA2;
-								lextable.table[idlex++].sn = lextable_pos;
-								if (r) lextable.table[idlex - 1].idxTI = idx;
-								cout << "1slex + " << LEX_COMMA << comma << " size " << idlex << endl;
-								comma = 0;
-								r = false;
-							}
-							idstek--;
-							break; }
-						if (stek[idstek].lexema == LEX_COMMA) {
-							
-							idstek--; continue;
-						}
-						else {
-							//cout << "slex + " << stek[idstek].lexema << " size " << idlex << endl;
-							lextable.table[idlex++] = stek[idstek--];
-							//if(prior(stek[idstek], lextable.table[idlex])) continue;
-						}
-						
-					}
-					if (lextable.table[i].lexema == LEX_SEMICOLON || lextable.table[i].lexema == LEX_LOGOPERATOR) {
-						lextable.table[idlex++] = lextable.table[i];
-						
-					}continue;
-					idstek = 0;
-				}
-				//cout << "lex + " << lextable.table[i].lexema << " size " << idlex << endl;
-				if(r)comma++;
-				if (lextable.table[i].lexema == LEX_ID && idtable.table[lextable.table[i].idxTI].idtype == 2) {
-					r = true;
-					comma = 0;
-					idx = lextable.table[i].idxTI;
-				}
-				else lextable.table[idlex++] = lextable.table[i];
-			}
+		if(e.idxTI < TI_MAXSIZE)
+		switch (idtable.table[e.idxTI].id[0])
+		{
+		case LEX_LEFTTHESIS: case LEX_RIGHTTHESIS: return 0;
+		case '+': case '-': return 1;
+		case '*': case '/': return 2;
+		case LEX_LEFTBRACE: case LEX_BRACELET: return 3;
+		default: return -1;
 		}
-		else {
-			idstek--;
-			while (idstek >= 0) {
-				if (stek[idstek].lexema == LEX_LEFTTHESIS) {
-					if (comma > 1 || r) {
-						if (comma >= 1) comma++;
-						lextable.table[idlex].comm = comma;
-						lextable.table[idlex].lexema = LEX_COMMA2;
-						lextable.table[idlex++].sn = lextable_pos;
-						if (r) lextable.table[idlex - 1].idxTI = idx;
-						//cout << "1slex + " << LEX_COMMA << comma << " size " << idlex << endl;
-						comma = 0;
-						r = false;
-					}
-					idstek--;
-					break;
-				}
-				if (stek[idstek].lexema == LEX_COMMA) {
+	}
 
-					idstek--; continue;
-				}
-				else {
-					//cout << "slex + " << stek[idstek].lexema << " size " << idlex << endl;
-					lextable.table[idlex++] = stek[idstek--];
-				}
-			}
-			idstek = 0;
-			if (lextable.table[i].lexema == LEX_SEMICOLON) lextable.table[idlex++] = lextable.table[i];
+	bool PolishNotation(Lex::LEX& tbls, Log::LOG& log)
+	{
+		unsigned curExprBegin = 0;
+		ltvec v; // вектор элементов таблицы лексем
+		LT::LexTable new_table = LT::Create(tbls.lextable.max_size);
+		intvec vpositions = getExprPositions(tbls); // позиции начала выражений
 
-				while (lextable.table[idlex].sn == lextable_pos)
+		for (int i = 0; i < tbls.lextable.size; i++)
+		{
+			if (curExprBegin < vpositions.size() && i == vpositions[curExprBegin]) // дошли до следующего начала выражения
+			{
+				int lexcount = fillVector(vpositions[curExprBegin], tbls.lextable, v); // заполняем вектор строками ТЛ в прямом порядке
+				if (lexcount > 1)
 				{
-					lextable.table[idlex++].lexema = NULL;
-					lextable.table[idlex - 1].sn = lextable_pos;
-
-					//cout << "lex + " << NULL << " size" << idlex << endl;
-
+					bool rc = setPolishNotation(tbls.idtable, log, vpositions[curExprBegin], v);   // получаем вектор co строками ТЛ в польской нотации
+					if (!rc)
+						return false;
 				}
-				i = idlex - 1;
-				//lextable_pos++;
-				comma = 1;
-				if (idstek > 0) {
-					cout << "Произошла ошибка приобразования в польскую запись " << lextable.table[i].sn << endl;
-					return false;
-				}
-				idstek = 0;
-				//cout << lextable_pos << endl;
-				return true;
-		}
-	}
-	//lextable = newlextable;
 
-	return true;
-}
-void preabr(LT::LexTable& lextable, IT::IdTable idtable) {
-	int lextable_pos = 0;
-	for (int i = 0; i < lextable.size; i++) {
-		if (lextable.table[i].sn > lextable_pos) {
-			lextable_pos++;
+				addToTable(new_table, tbls.idtable, v); // добавляем постpоенный вектор к ТЛ + корректировка ТИ
+				i += lexcount - 1;
+				curExprBegin++;
+				continue;
+			}
+			if (tbls.lextable.table[i].lexema == LEX_ID || tbls.lextable.table[i].lexema == LEX_LITERAL)
+			{
+				int firstind = Lex::getIndexInLT(new_table, tbls.lextable.table[i].idxTI);
+				if (firstind == -1)
+					firstind = new_table.size;
+				tbls.idtable.table[tbls.lextable.table[i].idxTI].idxfirstLE = firstind;
+			}
+			LT::Add(new_table, tbls.lextable.table[i]);
 		}
-		if (lextable.table[i + 1].lexema == '=') PolishNotation(lextable_pos, lextable, idtable, i);
-		if (lextable.table[i].lexema == 'i' && lextable.table[i + 1].lexema == '(') PolishNotation(lextable_pos, lextable, idtable, i);
-		if (lextable.table[i].lexema == ':')  PolishNotation(lextable_pos, lextable, idtable, i);
 
-	}
-}
-void ShowPN(LT::LexTable& lextable, IT::IdTable& idtable) {
-	int sni=1;
-	cout << "01.";
-	for (int i = 0; i < lextable.size-1; i++)
-	{
-		if (lextable.table[i].sn > sni) {
-			cout << endl;
-			sni = lextable.table[i].sn;
-			if (sni <= 9) cout << '0' << sni << ".";
-			else cout << sni << ".";
-		}
-		if (lextable.table[i].lexema == NULL) {
-			cout << "null";
-			continue;
-		}
-		if (lextable.table[i].lexema == LEX_COMMA2) {
-			cout << "@" << lextable.table[i].comm;
-		}
-		else
-		cout << lextable.table[i].lexema;
-	}
-}
-bool prior(LT::Entry i, LT::Entry j) {
-	string arr1 = "+-";
-	string arr2 = "*/";
-	int f1=1, f2=1;
-	for (int k=0; k < 2; k++) {
-		if (arr1[k] == i.lexema) {
-			f1 = 2;
-		}
-		if (arr2[k] == i.lexema) {
-			f1 = 3;
-		}
-		if (arr1[k] == j.lexema) {
-			f2 = 2;
-		}
-		if (arr2[k] == j.lexema) {
-			f2 = 3;
-		}
-	}
-	if (f1 > f2) {
+		tbls.lextable = new_table;
 		return true;
 	}
-	return false;
+
+	int __cdecl fillVector(int posExprBegin, LT::LexTable& lextable, ltvec& v)
+	{
+		v.clear();
+		for (int i = posExprBegin; i < lextable.size; i++)
+		{
+			if (lextable.table[i].lexema == LEX_SEMICOLON || lextable.table[i].lexema == LEX_SEMICOLON || lextable.table[i].lexema == LEX_ENDIF || lextable.table[i].lexema == LEX_LOGOPERATOR)
+				break;
+			else v.push_back(LT::Entry(lextable.table[i]));
+		}
+		return v.size();
+	}
+
+	void addToTable(LT::LexTable& new_table, IT::IdTable& idtable, ltvec& v)
+	{
+		for (unsigned i = 0; i < v.size(); i++)
+		{
+			LT::Add(new_table, v[i]);
+			// правильная обратная связь между ТЛ и ТИ
+			if (v[i].lexema == LEX_ID || v[i].lexema == LEX_LITERAL)
+			{
+				int firstind = Lex::getIndexInLT(new_table, v[i].idxTI);
+				idtable.table[v[i].idxTI].idxfirstLE = firstind;
+			}
+		}
+	}
+
+	intvec getExprPositions(Lex::LEX& tbls)
+	{
+		intvec v;
+		bool f_begin = false; // признак найденного конца выражения
+		bool f_end = false;  // признак найденного начала выражения
+		int begin = 0;  int end = 0;
+
+		for (int i = 0; i < tbls.lextable.size; i++)
+		{
+			if (!f_begin && (tbls.lextable.table[i].lexema == LEX_EQUAL || tbls.lextable.table[i].lexema == LEX_LOGOPERATOR || tbls.lextable.table[i].lexema == LEX_TWOPOINT)) // начало выражения
+			{
+				begin = i + 1;
+				f_begin = true;
+				continue;
+			}
+			if (f_begin && (tbls.lextable.table[i].lexema == LEX_SEMICOLON || tbls.lextable.table[i].lexema == LEX_ENDIF || tbls.lextable.table[i].lexema == LEX_LOGOPERATOR)) // конец выражения
+			{
+				end = i;
+				f_end = true;
+				if (tbls.lextable.table[i].lexema == LEX_LOGOPERATOR) i--;
+			}
+			if (f_begin && f_end)	// добавить начало и конец выражения в вектор
+			{
+				v.push_back(begin);
+				f_begin = f_end = false;
+			}
+		}
+		return v;
+	}
+
+	bool __cdecl setPolishNotation(IT::IdTable& idtable, Log::LOG& log, int lextable_pos, ltvec& v)
+	{
+		//результирующий вектор
+		vector < LT::Entry > result;
+		// стек для сохранения операторов
+		stack < LT::Entry > s;
+		// флаг вызова функции
+		bool ignore = false;
+
+		for (unsigned i = 0; i < v.size(); i++)
+		{
+			if (ignore)	// вызов функции считаем подставляемым значением и заносим в результат
+			{
+				result.push_back(v[i]);
+				if (v[i].lexema == LEX_RIGHTTHESIS) {
+					ignore = false;
+				}
+				continue;
+			}
+			int priority = getPriority(v[i], idtable); // его приоритет
+
+			if (v[i].lexema == LEX_LEFTTHESIS || v[i].lexema == LEX_RIGHTTHESIS || v[i].lexema == LEX_PLUS || v[i].lexema == LEX_MINUS || v[i].lexema == LEX_STAR || v[i].lexema == LEX_DIRSLASH || v[i].lexema == LEX_LEFTBRACE || v[i].lexema == LEX_BRACELET)
+			{
+				if (s.empty() /*|| v[i].lexema == LEX_LEFTTHESIS*/)
+				{
+					s.push(v[i]);
+					continue;
+				}
+
+				if (v[i].lexema == LEX_RIGHTTHESIS)
+				{
+					//выталкивание элементов до  скобки
+					while (!s.empty() && s.top().lexema != LEX_LEFTTHESIS)
+					{
+						result.push_back(s.top());
+						s.pop();
+					}
+					if (!s.empty() && s.top().lexema == LEX_LEFTTHESIS)
+						s.pop();
+					continue;
+				}
+				//выталкивание элем с большим/равным приоритетом в результат
+				while (!s.empty() && getPriority(s.top(), idtable) >= priority)
+				{
+					if(s.top().lexema != LEX_LEFTTHESIS)
+					result.push_back(s.top());
+					s.pop();
+				}
+				s.push(v[i]);
+			}
+
+			if (v[i].lexema == LEX_LITERAL || v[i].lexema == LEX_ID) // идентификатор, идентификатор функции или литерал
+			{
+				if (idtable.table[v[i].idxTI].idtype == IT::IDTYPE::F)
+					ignore = true;
+				result.push_back(v[i]);	// операнд заносим в результирующий вектор
+			}
+			if (v[i].lexema != LEX_LEFTTHESIS && v[i].lexema != LEX_RIGHTTHESIS && v[i].lexema != LEX_PLUS && v[i].lexema != LEX_MINUS && v[i].lexema != LEX_STAR && v[i].lexema != LEX_DIRSLASH && v[i].lexema != LEX_ID && v[i].lexema != LEX_LITERAL && v[i].lexema != LEX_LEFTBRACE && v[i].lexema != LEX_BRACELET && v[i].lexema != LEX_ENDIF)
+			{
+				Log::WriteError(log, Error::geterror(1));
+				return false;
+			}
+		}
+
+		while (!s.empty()) { result.push_back(s.top()); s.pop(); }
+		v = result;
+		return true;
+	}
+
 }
+

@@ -38,6 +38,7 @@ namespace IT {
 	{
 		//std::fstream *log.stream;
 		//*log.stream.open(parm.log, std::ios::app);//ios::app - дописыввать в конец файла
+		*log.stream << "------------------Таблица индетификаторов------------------" << endl << endl;
 		*log.stream << "№     | Имя        | тип данных | тип индитификатора  | первое вхождение | содержание " << endl;
 		for (int i = 0; i < table.size; i++) {
 			*log.stream << setw(6) << left <<i + 1  << "| ";

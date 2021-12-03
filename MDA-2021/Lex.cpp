@@ -11,9 +11,7 @@
 #define MIN_BANGOU -2147483647
 #define MAX_RAIN 256
 #include "FST_def.h"
-#include <regex>
-#include "Lex.h"
-#include "In.h"
+#include "stdafx.h"
 namespace Lex {
 	LEX lexAnaliz(Log::LOG log, In::IN in) {
 		LEX lex;
@@ -32,6 +30,7 @@ namespace Lex {
 		bool findFunc = false;
 		bool findParm = false;
 		bool findSameID = false;
+		bool endif = false;
 		int Idx_Func_IT = 0;
 		int Parm_count_IT = 0;
 		int count_main = 0;
@@ -103,6 +102,7 @@ namespace Lex {
 			{
 				LT::Entry entryLT = writeEntry(entryLT, LEX_IF, LT_TI_NULLIDX, line);
 				LT::Add(lextable, entryLT);
+				endif = true;
 				continue;
 			}
 			FST::FST fstRunOut(word[i], FST_RUNOUT);
@@ -131,6 +131,7 @@ namespace Lex {
 			{
 				LT::Entry entryLT = writeEntry(entryLT, LEX_FOR, LT_TI_NULLIDX, line);
 				LT::Add(lextable, entryLT);
+				endif = true;
 				continue;
 			}
 
@@ -427,6 +428,11 @@ namespace Lex {
 
 
 			position += _mbslen(word[i]);
+			if (word[i][0] == IN_CODE_DELIMETR && endif) {
+				LT::Entry entryLT = writeEntry(entryLT, LEX_ENDIF, LT_TI_NULLIDX, line);
+				LT::Add(lextable, entryLT);
+				endif = false;
+			}
 				if (word[i][0] == IN_CODE_DELIMETR) {// ≈сли это переход на слудующую строчку
 					line++;
 					position = 0;
@@ -453,6 +459,15 @@ namespace Lex {
 			return 1;
 		else
 			return 0;
+	}
+	int getIndexInLT(LT::LexTable& lextable, int itTableIndex)					// индекс первой встречи в таблице лексем
+	{
+		if (itTableIndex == TI_NULLIDX)		// если идентификатор встречаетс€ впервые
+			return lextable.size;
+		for (int i = 0; i < lextable.size; i++)
+			if (itTableIndex == lextable.table[i].idxTI)
+				return i;
+		return TI_NULLIDX;
 	}
 
 	int IntinInt16(unsigned char* word)

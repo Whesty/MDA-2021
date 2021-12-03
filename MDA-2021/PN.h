@@ -1,7 +1,19 @@
 #pragma once
-#include "IT.h"
-#include "LT.h"
-bool PolishNotation(int lextable_pos, LT::LexTable& lextable, IT::IdTable idtable, int j);
-void preabr(LT::LexTable& lextable, IT::IdTable idtable);
-void ShowPN(LT::LexTable& lextable, IT::IdTable& idtable);
-bool prior(LT::Entry i, LT::Entry j);
+#include "stdafx.h"
+#include <vector>
+
+typedef std::vector <LT::Entry> ltvec;
+typedef std::vector <int> intvec;
+
+namespace Polish
+{
+	bool PolishNotation(Lex::LEX& lex, Log::LOG& log);
+	// в вектор сохраняем позиции начала всех выражений в исходном тексте
+	intvec getExprPositions(Lex::LEX& lex);
+	// заполняем вектор лексемами в инфиксной нотации
+	int  fillVector(int lextable_pos, LT::LexTable& lextable, ltvec& v);
+	// внутри вектора получаем порядок идентификаторов в польской нотации
+	bool setPolishNotation(IT::IdTable& idtable, Log::LOG& log, int lextable_pos, ltvec& v);
+	// добавляем вектор в новую таблицу лексем
+	void addToTable(LT::LexTable& new_table, IT::IdTable& idtable, ltvec& v);
+};

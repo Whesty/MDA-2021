@@ -21,6 +21,20 @@ namespace LT
 	{
 		return lextable.table[n];
 	}
+	void writeLexTable(std::ostream* stream, LT::LexTable& lextable)
+	{
+		*stream << "------------------------------ ÒÀÁËÈÖÀ ËÅÊÑÅÌ  ------------------------\n" << std::endl;
+		*stream << "|  N | ËÅÊÑÅÌÀ | ÑÒÐÎÊÀ | ÈÍÄÅÊÑ Â ÒÈ |" << std::endl;
+		for (int i = 0; i < lextable.size; i++)
+		{
+			*stream << "|" << std::setw(3) << i << " | " << std::setw(4) << lextable.table[i].lexema << "    |  " << std::setw(3)
+				<< lextable.table[i].sn << "   |";
+			if (lextable.table[i].idxTI == -1)
+				*stream << "             |" << std::endl;
+			else
+				*stream << std::setw(8) << lextable.table[i].idxTI << "     |" << std::endl;
+		}
+	}
 
 	void Delete(LexTable& lextable)
 	{

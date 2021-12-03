@@ -3,6 +3,7 @@
 #include "Greibach.h"
 #include "LT.h"
 #include "Rule.h"
+#include "Log.h"
 #include <iomanip>
 class my_stack_SHORT :public std::stack<short> {
 public:
@@ -49,6 +50,37 @@ static char rbuf[205], sbuf[205], lbuf[1024];
 							<< std::setw(20) << std::left << rule.getCRule(rbuf, state.nrulechain)\
 							<< std::endl;
 #endif // COUT_CONSOLE
+#define MFST_TRACE_START_0	*log.stream << std::endl << "------------------Синтаксический анализ------------------"<< std::endl << std::endl;
+#define MFST_TRACE_START	*log.stream << std::setw(5) << std::setfill(' ') << std::left << "Шаг" << ":"\
+							<< std::setw(30) << std::left << "Правило"\
+							<< std::setw(30) << std::left << "Входная лента"\
+							<< std::setw(20) << std::left << "Стек"\
+							<< std::endl;
+
+#define MFST_TRACE1			*log.stream << std::setw(4) << std::left << ++FST_TRACE_n << ": " \
+							<< std::setw(30) << std::left << rule.getCRule(rbuf, nrulechain)\
+							<< std::setw(30) << std::left << getCLenta(lbuf, lenta_position)\
+							<< std::setw(20) << std::left << getCSt(sbuf)\
+							<< std::endl;
+
+#define MFST_TRACE2			*log.stream << std::setw(4) << std::left << FST_TRACE_n << ": "\
+							<< std::setw(30) << std::left << " "\
+							<< std::setw(30) << std::left << getCLenta(lbuf, lenta_position)\
+							<< std::setw(20) << std::left << getCSt(sbuf)\
+							<< std::endl;
+
+#define MFST_TRACE3			*log.stream << std::setw(4) << std::left << ++FST_TRACE_n << ": "\
+							<< std::setw(30) << std::left << " "\
+							<< std::setw(30) << std::left << getCLenta(lbuf, lenta_position)\
+							<< std::setw(20) << std::left << getCSt(sbuf)\
+							<< std::endl;
+
+#define MFST_TRACE4(c)		*log.stream << std::setw(4) << std::left << ++FST_TRACE_n << ": " << std::setw(20) << std::left << c << std::endl;
+#define MFST_TRACE5(c)		*log.stream << std::setw(4) << std::left << FST_TRACE_n << ": " << std::setw(20) << std::left << c << std::endl;
+#define MFST_TRACE6(c, k)	*log.stream << std::setw(4) << std::left << FST_TRACE_n << ": " << std::setw(20) << std::left << c << k << std::endl;
+#define MFST_TRACE7			*log.stream << std::setw(4) << std::left << state.lenta_position << ": "\
+							<< std::setw(20) << std::left << rule.getCRule(rbuf, state.nrulechain)\
+							<< std::endl;
 
 typedef my_stack_SHORT MFSTSTSTACK;
 namespace MFST {
@@ -95,6 +127,7 @@ namespace MFST {
 		short lenta_size;
 		GRB::Greibach greibach;
 		LT::LexTable lex;
+		Log::LOG log;
 		MFSTSTSTACK st;
 		my_stack_MfstState storestate;
 		Mfst();

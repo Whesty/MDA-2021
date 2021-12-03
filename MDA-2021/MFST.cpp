@@ -135,6 +135,8 @@ namespace MFST {
 		bool rc = false;
 		RC_STEP rc_step = SURPRISE;
 		char buf[MFST_DIAGN_MAXSIZE]{};
+		MFST_TRACE_START_0
+		MFST_TRACE_START
 		rc_step = step();
 		while (rc_step == NS_OK || rc_step == NS_NORULECHAIN || rc_step == TS_OK || rc_step == TS_NOK)
 			rc_step = step();

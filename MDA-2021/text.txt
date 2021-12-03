@@ -5,7 +5,6 @@ void func fr(bangou t, rain e){
 main
 {
 	rain t = "ÔÛÂÛûàûâà123423.ışıæşáüşş._=394832SFhsdfDSHh";
-	rain str = "";
 	bangou a = 12;
 	bangou w = 15;
 	bangou b = 16x2A;

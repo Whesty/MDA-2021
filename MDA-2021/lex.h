@@ -14,4 +14,5 @@ namespace Lex {
 	LEX lexAnaliz(Log::LOG log, In::IN in);
 	bool checkBrace(unsigned char** word, int k);
 	int IntinInt16(unsigned char* word);
+	int getIndexInLT(LT::LexTable& lextable, int itTableIndex);
 }
