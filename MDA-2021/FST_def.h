@@ -268,4 +268,16 @@
 	FST::NODE(1, FST::RELATION('i', 1)), \
 	FST::NODE(1, FST::RELATION('f', 2)), \
 	FST::NODE()
+#define FST_LEN 4, \
+	FST::NODE(1, FST::RELATION('l', 1)), \
+	FST::NODE(1, FST::RELATION('e', 2)), \
+	FST::NODE(1, FST::RELATION('n', 3)), \
+	FST::NODE()
+#define FST_CMP 6, \
+	FST::NODE(1, FST::RELATION('s', 1)), \
+	FST::NODE(1, FST::RELATION('t', 2)), \
+	FST::NODE(1, FST::RELATION('c', 3)), \
+	FST::NODE(1, FST::RELATION('m', 4)), \
+	FST::NODE(1, FST::RELATION('p', 5)), \
+	FST::NODE()
 #pragma endregion

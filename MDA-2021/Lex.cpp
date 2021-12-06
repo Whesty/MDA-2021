@@ -35,10 +35,14 @@ namespace Lex {
 		int Parm_count_IT = 0;
 		int count_main = 0;
 
+
 		unsigned char* RegionPrefix = new unsigned char[10]{ "" };
 		unsigned char* buferRegionPrefix = new unsigned char[10]{ "" };
 		unsigned char* pastRegionPrefix = new unsigned char[10]{ "" }; 
 		unsigned char* L = new unsigned char[2]{ "L" };
+		unsigned char* source1 = new unsigned char[8]{ "source1" };
+		unsigned char* source2 = new unsigned char[8]{ "source2" };
+		unsigned char* source = new unsigned char[8]{ "source" };
 		unsigned char* bufL = new unsigned char[TI_STR_MAXSIZE];
 		char* charCountLit = new char[10]{ "" };
 		unsigned char* nameLiteral = new unsigned char[TI_STR_MAXSIZE] { "" };
@@ -143,10 +147,70 @@ namespace Lex {
 				count_main++;
 				// Вхождение в функцию main значит все заднные в ней индентификаторы должны иметь префикс
 				_mbscpy(pastRegionPrefix, RegionPrefix);
-				_mbscpy(RegionPrefix, word[i]);
+				_mbscpy(RegionPrefix, emptystr);
 				continue;
 			}
 
+			FST::FST fstLen(word[i], FST_LEN);
+			if (FST::execute(fstLen))
+			{
+				LT::Entry entryLT = writeEntry(entryLT, LEX_ID, indexID++, line);
+				LT::Add(lextable, entryLT);
+
+				entryIT.idtype = IT::F;
+				entryIT.iddatatype = IT::INT;
+				entryIT.value.vint = TI_INT_DEFAULT;
+				entryIT.parm = 1;
+				// Добавляем в таблицу индентификаторов
+				entryIT.idxfirstLE = indexLex;
+				_mbscpy(entryIT.id, word[i]);// Имя индентификатора
+				IT::Add(idtable, entryIT);
+				entryIT.idtype = IT::P;
+				entryIT.iddatatype = IT::STR;
+				entryIT.value.vstr.len = 0;
+				memset(entryIT.value.vstr.str, TI_STR_DEFAULT, sizeof(char));
+				// Добавляем в таблицу индентификаторов
+				entryIT.idxfirstLE = -1;
+				_mbscpy(entryIT.id, source);// Имя индентификатора
+				IT::Add(idtable, entryIT);
+				indexID = indexID + 1;
+
+				continue;
+			}
+			FST::FST fstCmp(word[i], FST_CMP);
+			if (FST::execute(fstCmp))
+			{
+				LT::Entry entryLT = writeEntry(entryLT, LEX_ID, indexID++, line);
+				LT::Add(lextable, entryLT);
+
+				entryIT.idtype = IT::F;
+				entryIT.iddatatype = IT::INT;
+				entryIT.value.vint = TI_INT_DEFAULT;
+				entryIT.parm = 2;
+
+				// Добавляем в таблицу индентификаторов
+				entryIT.idxfirstLE = indexLex;
+				_mbscpy(entryIT.id, word[i]);// Имя индентификатора
+				IT::Add(idtable, entryIT);
+				entryIT.idtype = IT::P;
+				entryIT.iddatatype = IT::STR;
+				entryIT.value.vstr.len = 0;
+				memset(entryIT.value.vstr.str, TI_STR_DEFAULT, sizeof(char));
+				// Добавляем в таблицу индентификаторов 1 параметр
+				entryIT.idxfirstLE = -1;
+				_mbscpy(entryIT.id, source1);// Имя индентификатора
+				IT::Add(idtable, entryIT);
+				entryIT.idtype = IT::P;
+				entryIT.iddatatype = IT::STR;
+				entryIT.value.vstr.len = 0;
+				memset(entryIT.value.vstr.str, TI_STR_DEFAULT, sizeof(char));
+				// Добавляем в таблицу индентификаторов 2 параметр
+				entryIT.idxfirstLE = -1;
+				_mbscpy(entryIT.id, source2);// Имя индентификатора
+				IT::Add(idtable, entryIT);
+				indexID = indexID + 2;
+				continue;
+			}
 			// Если это индитификатор (любое слово состоящие из букс цифр и знака подчеркивание)
 			FST::FST fstIdentif(word[i], FST_ID);
 			if (FST::execute(fstIdentif)) {
@@ -417,7 +481,7 @@ namespace Lex {
 					continue;
 			}
 			FST::FST fstLitStr_1(word[i], FST_LITERALSTRING_1);
-			if (FST::execute(fstTwoPoint))
+			if (FST::execute(fstLitStr_1))
 			{
 				LT::Entry entryLT = writeEntry(entryLT, word[i][0], LT_TI_NULLIDX, line);
 					LT::Add(lextable, entryLT);

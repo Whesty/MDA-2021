@@ -32,6 +32,7 @@ int wmain(int argc, wchar_t* argv[]) {
 		else cout << "Преобразование выражений завершено без ошибок" << endl;
 
 		LT::writeLexTable(log.stream, lex.lextable);
+		Gener::CodeGeneration(lex, parm, log);
 		//preabr(lex.lextable, lex.idtable);
 		//ShowPN(lex.lextable, lex.idtable);
 		Log::Close(log);
