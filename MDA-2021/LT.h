@@ -61,6 +61,7 @@ namespace LT		// таблица лексем
 		LexTable& lextable,	// экземпл€р таблицы лексем
 		Entry entry			// строка таблицы лексем
 	);
+	void Add(LexTable& lextable, Entry entry, int i);
 
 	Entry GetEntry(			// получить строку таблицы лексем
 		LexTable& lextable,	// экземпл€р таблицы лексем

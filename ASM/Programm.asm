@@ -15,7 +15,7 @@ stcmp PROTO : DWORD, : DWORD
 .const
 		newline byte 13, 10, 0
 L1 byte '╘█┬█√р√тр123423.¤■¤ц■с№■■._=394832SFhsdfDSHh', 0
-L2 sdword 12
+L2 sdword -12
 L3 sdword 15
 L4 sdword 42
 L5 sdword 3

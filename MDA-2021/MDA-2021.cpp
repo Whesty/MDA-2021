@@ -15,6 +15,7 @@ int wmain(int argc, wchar_t* argv[]) {
 		Log::WriteIn(log, in);
 		Lex::LEX lex = Lex::lexAnaliz(log, in);
 		LT::showTable(lex.lextable, parm);
+		LT::writeLexTable(log.stream, lex.lextable);
 		IT::showITable(lex.idtable, log);
 		MFST::Mfst mfst(lex.lextable, GRB::getGreibach());//Автомат
 		mfst.log = log;

@@ -18,6 +18,10 @@ namespace IT {
 		if (idtable.size > idtable.max_size) throw ERROR_THROW(106);
 		idtable.table[idtable.size++] = entry;
 	}
+	void Add(IdTable& idtable, Entry entry, int i) {
+		if (idtable.size > idtable.max_size) throw ERROR_THROW(106);
+		idtable.table[i] = entry;
+	}
 	Entry GetEntry(IdTable& idtable, int n) {
 		return idtable.table[n];
 	}

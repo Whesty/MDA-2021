@@ -292,17 +292,32 @@ namespace Lex {
 					}
 				}
 				if (findSameID) continue;
-				LT::Entry entryLT = writeEntry(entryLT, LEX_LITERAL, indexID++, line);//Добавляем в таблицу лексем
-				LT::Add(lextable, entryLT);
+				if (lextable.table[lextable.size - 1].lexema == LEX_OPERATOR && idtable.table[lextable.table[lextable.size - 1].idxTI].id[0] == '-') {
+					LT::Entry entryLT = writeEntry(entryLT, LEX_LITERAL, indexID-1, line);//Добавляем в таблицу лексем
+					LT::Add(lextable, entryLT, lextable.size - 1);
+				}
+				else {
+					LT::Entry entryLT = writeEntry(entryLT, LEX_LITERAL, indexID++, line);//Добавляем в таблицу лексем
+					LT::Add(lextable, entryLT);
+				}
 				entryIT.iddatatype = IT::INT;// Тип данных
 				entryIT.idtype = IT::L;// Тип индитификатора
-				entryIT.value.vint = value; // Значение
+				if (lextable.table[lextable.size - 2].lexema == LEX_EQUAL && word[i-1][0] == '-')
+				{
+					entryIT.value.vint = -value;
+				}else
+					entryIT.value.vint = value; // Значение
 				entryIT.idxfirstLE = indexLex;// Индекс первой лексемы
 				_itoa_s(countLit++, charCountLit, sizeof(char) * 10, 10);// Создание имени литерала ("L<порядковый номер литерала>")
 				_mbscpy(bufL, L);
 				word[i] = _mbscat(bufL, (unsigned char*)charCountLit);
 				_mbscpy(entryIT.id, word[i]);
-				IT::Add(idtable, entryIT);
+				if (lextable.table[lextable.size - 2].lexema == LEX_EQUAL && word[i - 1][0] == '-')
+				{
+					IT::Add(idtable, entryIT, idtable.size-1);
+				}
+				else
+					IT::Add(idtable, entryIT);
 				continue;
 			}
 			// Литерал число в 16bit

@@ -278,7 +278,9 @@ namespace Gener
 			{
 				switch (e.iddatatype)
 				{
-				case IT::IDDATATYPE::INT: str = str + " sdword 0";  break;
+					case IT::IDDATATYPE::INT: {
+
+						str = str + " sdword 0";  break; }
 				case IT::IDDATATYPE::INT16: str = str + " sdword 0";  break;
 				case IT::IDDATATYPE::STR: str = str + " dword ?";  break;
 				}

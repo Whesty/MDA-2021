@@ -16,6 +16,11 @@ namespace LT
 		if (lextable.size > lextable.max_size) throw ERROR_THROW(106);
 		lextable.table[lextable.size++] = entry;
 	}
+	void Add(LexTable& lextable, Entry entry, int i)
+	{
+		if (lextable.size > lextable.max_size) throw ERROR_THROW(106);
+		lextable.table[i] = entry;
+	}
 
 	Entry GetEntry(LexTable& lextable, int n)
 	{

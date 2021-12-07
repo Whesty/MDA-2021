@@ -44,6 +44,7 @@ namespace IT			// таблица идентификаторов
 		IdTable& idtable,	// экземпляр таблицы идентификаторов
 		Entry entry			// строка таблицы идентификаторов
 	);
+	void Add(IdTable& idtable, Entry entry, int i);
 
 	Entry GetEntry(			// получить строку таблицы идентификаторов
 		IdTable& idtable,	// экземпляр таблицы идентификаторов
