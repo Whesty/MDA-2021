@@ -34,6 +34,7 @@ namespace Lex {
 		int Idx_Func_IT = 0;
 		int Parm_count_IT = 0;
 		int count_main = 0;
+		bool newindf = false;
 
 
 		unsigned char* RegionPrefix = new unsigned char[10]{ "" };
@@ -58,7 +59,7 @@ namespace Lex {
 			{
 				LT::Entry entryLT = writeEntry(entryLT, LEX_INTEGER, LT_TI_NULLIDX, line);
 				LT::Add(lextable, entryLT);
-
+				newindf = true;
 				entryIT.iddatatype = IT::INT;
 				continue;
 			}
@@ -67,7 +68,7 @@ namespace Lex {
 			{
 				LT::Entry entryLT = writeEntry(entryLT, LEX_VOID, LT_TI_NULLIDX, line);
 				LT::Add(lextable, entryLT);
-
+				newindf = true;
 				entryIT.iddatatype = IT::VOI;
 				continue;
 			}
@@ -76,7 +77,7 @@ namespace Lex {
 			{
 				LT::Entry entryLT = writeEntry(entryLT, LEX_STRING, LT_TI_NULLIDX, line);
 				LT::Add(lextable, entryLT);
-
+				newindf = true;
 				entryIT.iddatatype = IT::STR;
 				_mbscpy(entryIT.value.vstr.str, emptystr);
 				continue;
@@ -154,6 +155,14 @@ namespace Lex {
 			FST::FST fstLen(word[i], FST_LEN);
 			if (FST::execute(fstLen))
 			{
+				int idx = TI_NULLIDX;
+				idx = IT::IsId(idtable, word[i]);
+				if (idx != TI_NULLIDX)
+				{
+					LT::Entry entryLT = writeEntry(entryLT, LEX_ID, idx, line);
+					LT::Add(lextable, entryLT);
+					continue;
+				}
 				LT::Entry entryLT = writeEntry(entryLT, LEX_ID, indexID++, line);
 				LT::Add(lextable, entryLT);
 
@@ -180,6 +189,14 @@ namespace Lex {
 			FST::FST fstCmp(word[i], FST_CMP);
 			if (FST::execute(fstCmp))
 			{
+				int idx = TI_NULLIDX;
+				idx = IT::IsId(idtable, word[i]);
+				if (idx != TI_NULLIDX)
+				{
+					LT::Entry entryLT = writeEntry(entryLT, LEX_ID, idx, line);
+					LT::Add(lextable, entryLT);
+					continue;
+				}
 				LT::Entry entryLT = writeEntry(entryLT, LEX_ID, indexID++, line);
 				LT::Add(lextable, entryLT);
 
@@ -243,6 +260,7 @@ namespace Lex {
 						LT::Add(lextable, entryLT);
 						continue;
 					}
+					if (!newindf) Log::WriteError(log, Error::geterrorin(300, line, position));
 				}
 				// Если ничего из выше перечисленного не было заданно
 				LT::Entry entryLT = LT::writeEntry(entryLT, LEX_ID, indexID++, line);// Задаем в таблицу лексем
@@ -272,7 +290,7 @@ namespace Lex {
 				IT::Add(idtable, entryIT);
 				if(findFunc)
 				Idx_Func_IT = IT::IsId(idtable, word[i]);
-
+				newindf = false;
 				findFunc = false;
 				continue;
 			}
@@ -284,7 +302,7 @@ namespace Lex {
 				if(value > MAX_BANGOU) throw ERROR_THROW_IN(202, line, position);
 				if(value < MIN_BANGOU) throw ERROR_THROW_IN(202, line, position);
 				for (int k = 0; k < idtable.size; k++) {//Если значение было заданно раньше то добавляем её из таблицы индитифакоторов в таблицу лексем
-					if (idtable.table[k].value.vint == value && idtable.table[k].idtype == IT::L) {
+					if (idtable.table[k].iddatatype == IT::IDDATATYPE::INT && idtable.table[k].value.vint == value && idtable.table[k].idtype == IT::L) {
 						LT::Entry entryLT = LT::writeEntry(entryLT, LEX_LITERAL, k, line);
 						LT::Add(lextable, entryLT);
 						findSameID = true;
@@ -327,7 +345,7 @@ namespace Lex {
 				if (length > 14) throw ERROR_THROW_IN(202, line, position);
 				unsigned char* value = word[i];
 				for (int k = 0; k < idtable.size; k++) {//Если значение было заданно раньше то добавляем её из таблицы индитифакоторов в таблицу лексем
-					if (idtable.table[k].value.vstr.str == value && idtable.table[k].idtype == IT::L) {
+					if (idtable.table[k].iddatatype == IT::IDDATATYPE::INT16 && idtable.table[k].value.vstr.str == value && idtable.table[k].idtype == IT::L) {
 						LT::Entry entryLT = LT::writeEntry(entryLT, LEX_LITERAL, k, line);
 						LT::Add(lextable, entryLT);
 						findSameID = true;
@@ -335,18 +353,36 @@ namespace Lex {
 					}
 				}
 				if (findSameID) continue;
-				LT::Entry entryLT = writeEntry(entryLT, LEX_LITERAL, indexID++, line);//Добавляем в таблицу лексем
-				LT::Add(lextable, entryLT);
+				if (lextable.table[lextable.size - 1].lexema == LEX_OPERATOR && idtable.table[lextable.table[lextable.size - 1].idxTI].id[0] == '-') {
+					LT::Entry entryLT = writeEntry(entryLT, LEX_LITERAL, indexID - 1, line);//Добавляем в таблицу лексем
+					LT::Add(lextable, entryLT, lextable.size - 1);
+				}
+				else {
+					LT::Entry entryLT = writeEntry(entryLT, LEX_LITERAL, indexID++, line);//Добавляем в таблицу лексем
+					LT::Add(lextable, entryLT);
+				}
 				entryIT.iddatatype = IT::INT16;// Тип данных
 				entryIT.idtype = IT::L;// Тип индитификатора
 				_mbscpy(entryIT.value.vstr.str, word[i]); // Значение
 				entryIT.value.vint = IntinInt16(word[i]);
+
+				if (lextable.table[lextable.size - 2].lexema == LEX_EQUAL && word[i - 1][0] == '-')
+				{
+					entryIT.value.vint = -entryIT.value.vint;
+				}
+				else
+					entryIT.value.vint = entryIT.value.vint;
 				entryIT.idxfirstLE = indexLex;// Индекс первой лексемы
 				_itoa_s(countLit++, charCountLit, sizeof(char) * 10, 10);// Создание имени литерала ("L<порядковый номер литерала>")
 				_mbscpy(bufL, L);
 				word[i] = _mbscat(bufL, (unsigned char*)charCountLit);
 				_mbscpy(entryIT.id, word[i]);
-				IT::Add(idtable, entryIT);
+				if (lextable.table[lextable.size - 2].lexema == LEX_EQUAL && word[i - 1][0] == '-')
+				{
+					IT::Add(idtable, entryIT, idtable.size - 1);
+				}
+				else
+					IT::Add(idtable, entryIT);
 				continue;
 			}
 
@@ -363,7 +399,7 @@ namespace Lex {
 
 				for (int k = 0; k < idtable.size; k++)// Ищем значение в таблице индентификаторов
 				{
-					if (!(_mbscmp(idtable.table[k].value.vstr.str, word[i])))//Если нашли то дабавляем в таблицу лексем
+					if (idtable.table[k].iddatatype == IT::IDDATATYPE::STR && !(_mbscmp(idtable.table[k].value.vstr.str, word[i])))//Если нашли то дабавляем в таблицу лексем
 					{
 						findSameID = true;
 						LT::Entry entryLT = writeEntry(entryLT, LEX_LITERAL, k, line);

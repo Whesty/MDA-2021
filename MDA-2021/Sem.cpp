@@ -54,13 +54,15 @@ bool Sem::SemAnaliz(LT::LexTable lextable, IT::IdTable idtable, Log::LOG log)
 					{
 						if (!ignore)
 						{
-							IT::IDDATATYPE righttype = idtable.table[lextable.table[k].idxTI].iddatatype;
-							if (righttype == IT::IDDATATYPE::INT16) righttype = IT::IDDATATYPE::INT;
-							if (lefttype != righttype) // типы данных в выражении не совпадают
-							{
-								Log::WriteError(log, Error::geterrorin(314, lextable.table[k].sn, 0));
-								sem_ok = false;
-								break;
+							if (lextable.table[k].lexema == LEX_ID || lextable.table[k].lexema == LEX_LITERAL) {
+								IT::IDDATATYPE righttype = idtable.table[lextable.table[k].idxTI].iddatatype;
+								if (righttype == IT::IDDATATYPE::INT16) righttype = IT::IDDATATYPE::INT;
+								if (lefttype != righttype) // типы данных в выражении не совпадают
+								{
+									Log::WriteError(log, Error::geterrorin(314, lextable.table[k].sn, 0));
+									sem_ok = false;
+									break;
+								}
 							}
 						}
 						// если лексема сразу после идентиф скобка - это вызов функции

@@ -43,7 +43,6 @@ namespace LT		// таблица лексем
 		unsigned char lexema;	// лексема
 		int sn;					// номер строки в исходном тексте
 		int idxTI = TI_NULLIDX;				// индекс в таблице идентификаторов или LT_TI_NULLIDX
-		int comm;
 	};
 
 	struct LexTable				// экземпляр таблицы лексем

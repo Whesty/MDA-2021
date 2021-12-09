@@ -15,20 +15,21 @@ stcmp PROTO : DWORD, : DWORD
 .const
 		newline byte 13, 10, 0
 L1 byte 'ÔÛÂÛûàûâà123423.ýþýæþáüþþ._=394832SFhsdfDSHh', 0
-L2 sdword -12
-L3 sdword 15
-L4 sdword 42
-L5 sdword 3
-L6 sdword 2
+L2 byte '134', 0
+L3 sdword -12
+L4 sdword 15
+L5 sdword -42
+L6 sdword 3
+L7 sdword 2
 .data
 		temp sdword ?
 		buffer byte 256 dup(0)
 t dword ?
+tr dword ?
 a sdword 0
 w sdword 0
 b sdword 0
 i sdword 0
-q sdword 0
 left dword ?
 rig dword ?
 result sdword ?
@@ -95,17 +96,18 @@ right0:
 ;----------- MAIN ------------
 main PROC
 mov t, offset L1
-push L2
+mov tr, offset L2
+push L3
 
 pop ebx
 mov a, ebx
 
-push L3
+push L4
 
 pop ebx
 mov w, ebx
 
-push L4
+push L5
 
 pop ebx
 mov b, ebx
@@ -162,6 +164,14 @@ push t
 call len
 push eax
 
+push tr
+call len
+push eax
+pop ebx
+pop eax
+add eax, ebx
+push eax
+
 pop ebx
 mov i, ebx
 
@@ -186,7 +196,7 @@ push eax
 pop ebx
 mov left, ebx
 
-push L5
+push L6
 
 pop ebx
 mov rig, ebx
@@ -198,18 +208,12 @@ jg cycle2
 jmp cyclenext2
 cycle2:
 push a
-push q
 push w
-pop ebx
-pop eax
-cdq
-idiv ebx
-push eax
 pop ebx
 pop eax
 add eax, ebx
 push eax
-push L6
+push L7
 pop ebx
 pop eax
 add eax, ebx
@@ -235,7 +239,7 @@ push eax
 
 pop ebx
 mov left, ebx
-push L5
+push L6
 
 pop ebx
 mov rig, ebx

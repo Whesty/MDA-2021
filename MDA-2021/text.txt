@@ -5,19 +5,20 @@ void func fr(bangou t, rain e){
 main
 {
 	rain t = "ÔÛÂÛûàûâà123423.ışıæşáüşş._=394832SFhsdfDSHh";
+	rain tr = "134";
 	bangou a = -12;
 	bangou w = 15;
-	bangou b = 16x2A;
+	bangou b = -16x2A;
 	a = a + b;
 	if: a<w 
 	a = w - a;
 	^ a = w - a;
-	bangou i = len(t);
+	bangou i = len(t) + len(tr);
 	runout i;
 	fr(a, t);
 	for: w-a>(3)
 	{
-	 a = a + q/(w+2);
+	 a = a + (w+2);
 	}
 	runout a;
 	return;
