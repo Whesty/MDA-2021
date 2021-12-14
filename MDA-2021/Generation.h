@@ -7,7 +7,7 @@
 ".model flat, stdcall\n"\
 "includelib libucrt.lib\n"\
 "includelib kernel32.lib\n"\
-"includelib \"../Debug/Lib.lib\n"\
+"includelib \"../Debug/Lib.lib\"\n"\
 "ExitProcess PROTO:DWORD \n"\
 ".stack 4096\n"
 

@@ -23,7 +23,7 @@ bool Sem::SemAnaliz(LT::LexTable lextable, IT::IdTable idtable, Log::LOG log)
 							if (lextable.table[k + 2].lexema == LEX_LITERAL && idtable.table[lextable.table[k + 2].idxTI].value.vint == 0)
 							{
 								sem_ok = false;
-								Log::WriteError(log, Error::geterrorin(318, lextable.table[k].sn, 0));//Деление на нуль
+								Log::WriteError(log.stream, Error::geterrorin(318, lextable.table[k].sn, 0));//Деление на нуль
 							}
 						}
 					}
@@ -34,7 +34,7 @@ bool Sem::SemAnaliz(LT::LexTable lextable, IT::IdTable idtable, Log::LOG log)
 				if (idtable.table[lextable.table[i + 1].idxTI].value.vint == 0)
 				{
 					sem_ok = false;
-					Log::WriteError(log, Error::geterrorin(318, lextable.table[k].sn, 0));//Деление на нуль
+					Log::WriteError(log.stream, Error::geterrorin(318, lextable.table[k].sn, 0));//Деление на нуль
 				}
 			}
 			break;
@@ -59,7 +59,7 @@ bool Sem::SemAnaliz(LT::LexTable lextable, IT::IdTable idtable, Log::LOG log)
 								if (righttype == IT::IDDATATYPE::INT16) righttype = IT::IDDATATYPE::INT;
 								if (lefttype != righttype) // типы данных в выражении не совпадают
 								{
-									Log::WriteError(log, Error::geterrorin(314, lextable.table[k].sn, 0));
+									Log::WriteError(log.stream, Error::geterrorin(314, lextable.table[k].sn, 0));
 									sem_ok = false;
 									break;
 								}
@@ -83,7 +83,7 @@ bool Sem::SemAnaliz(LT::LexTable lextable, IT::IdTable idtable, Log::LOG log)
 						char l = lextable.table[k].lexema;
 						if (l == LEX_PLUS || l == LEX_MINUS || l == LEX_STAR) // выражения недопустимы
 						{
-							Log::WriteError(log, Error::geterrorin(316, lextable.table[k].sn, 0));
+							Log::WriteError(log.stream, Error::geterrorin(316, lextable.table[k].sn, 0));
 							sem_ok = false;
 							break;
 						}
@@ -111,7 +111,7 @@ bool Sem::SemAnaliz(LT::LexTable lextable, IT::IdTable idtable, Log::LOG log)
 								// тип функции и возвращаемого значения не совпадают
 								if (idtable.table[next].iddatatype != e.iddatatype)
 								{
-									Log::WriteError(log, Error::geterrorin(315, lextable.table[k].sn, 0));
+									Log::WriteError(log.stream, Error::geterrorin(315, lextable.table[k].sn, 0));
 									sem_ok = false;
 									break;
 								}
@@ -132,7 +132,7 @@ bool Sem::SemAnaliz(LT::LexTable lextable, IT::IdTable idtable, Log::LOG log)
 								// тип функции и возвращаемого значения не совпадают
 								if (next != LEX_SEMICOLON)
 								{
-									Log::WriteError(log, Error::geterrorin(315, lextable.table[k].sn, 0));
+									Log::WriteError(log.stream, Error::geterrorin(315, lextable.table[k].sn, 0));
 									sem_ok = false;
 									break;
 								}
@@ -160,7 +160,7 @@ bool Sem::SemAnaliz(LT::LexTable lextable, IT::IdTable idtable, Log::LOG log)
 							if (ctype != idtable.table[lextable.table[i].idxTI + paramscount].iddatatype)
 							{
 								// Несовпадение типов передаваемых параметров
-								Log::WriteError(log, Error::geterrorin(309, lextable.table[i].sn, 0));
+								Log::WriteError(log.stream, Error::geterrorin(309, lextable.table[i].sn, 0));
 								sem_ok = false;
 								break;
 							}
@@ -171,13 +171,13 @@ bool Sem::SemAnaliz(LT::LexTable lextable, IT::IdTable idtable, Log::LOG log)
 					if (paramscount != e.parm)
 					{
 						// Количество передаваемых и принимаемых параметров не совпадает
-						Log::WriteError(log, Error::geterrorin(308, lextable.table[i].sn, 0));
+						Log::WriteError(log.stream, Error::geterrorin(308, lextable.table[i].sn, 0));
 						sem_ok = false;
 					}
 					if (paramscount > 3)
 					{
 						// Слишком много параметров в вызове
-						Log::WriteError(log, Error::geterrorin(307, lextable.table[i].sn, 0));
+						Log::WriteError(log.stream, Error::geterrorin(307, lextable.table[i].sn, 0));
 						sem_ok = false;
 					}
 				}
@@ -201,7 +201,7 @@ bool Sem::SemAnaliz(LT::LexTable lextable, IT::IdTable idtable, Log::LOG log)
 			if (!flag)
 			{
 				// строка или неизвестный ид в условии
-				Log::WriteError(log, Error::geterrorin(317, lextable.table[i].sn, 0));//Неверное условие вырожения
+				Log::WriteError(log.stream, Error::geterrorin(317, lextable.table[i].sn, 0));//Неверное условие вырожения
 				sem_ok = false;
 			}
 			break;

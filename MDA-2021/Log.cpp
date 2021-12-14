@@ -19,15 +19,15 @@ namespace Log {
 		wcscpy_s(log.logfile, logfile);
 		return log;
 	}
-	void WriteLine(LOG log, const char* c, ...) {
+	void WriteLine(ostream* log, const char* c, ...) {
 		const char** ptr = &c;
 		int i = 0;
 		while (ptr[i] != "")
-			*log.stream << ptr[i++];
-		*log.stream << endl;
+			*log << ptr[i++];
+		*log << endl;
 	}
 
-	void WriteLine(LOG log, const wchar_t* c, ...)
+	void WriteLine(ostream* log, const wchar_t* c, ...)
 	{
 		const wchar_t** ptr = &c;
 		char temp[100];
@@ -35,17 +35,17 @@ namespace Log {
 		while (ptr[i] != L"")
 		{
 			wcstombs(temp, ptr[i++], sizeof(temp));
-			*log.stream << temp;
+			*log << temp;
 		}
-		*log.stream << endl;
+		*log << endl;
 	}
-	void WriteLog(LOG log) {
+	void WriteLog(ostream* log) {
 		char temp[100];
 		time_t tmr;
 		time(&tmr);
 		tm *tmf= localtime(&tmr);
 		strftime(temp, sizeof(temp), "\n---------------Протокол-----------------\n ------%d.%m.%y %T-----\n  ", tmf);
-		*log.stream << temp;
+		*log << temp;
 	}
 	//void writelex(In::IN in) {
 	//	int i = 0;
@@ -61,29 +61,29 @@ namespace Log {
 	//		cout << endl;
 	//	}
 	//}
-	void WriteIn(LOG log, In::IN in) {
-		*log.stream /*<< "\n-----------------Исходные данные--------------------\n" << in.text*/
+	void WriteIn(ostream* log, In::IN in) {
+		*log /*<< "\n-----------------Исходные данные--------------------\n" << in.text*/
 		<< "\n\nВсего символов: " << in.size
 			<< "\n\nВсего строк: " << in.lines
 			<< "\n\nПропущено: " << in.ignor << endl;
 		//cout << in.text << endl;
 		//writelex(in);
 	}
-	void WriteParm(LOG log, Parm::PARM parm) {
+	void WriteParm(ostream* log, Parm::PARM parm) {
 		char in_text[PARM_MAX_SIZE];
 		char out_text[PARM_MAX_SIZE];
 		char log_text[PARM_MAX_SIZE];
 		wcstombs(in_text, parm.in, PARM_MAX_SIZE);
 		wcstombs(out_text, parm.out, PARM_MAX_SIZE);
 		wcstombs(log_text, parm.log, PARM_MAX_SIZE);
-		*log.stream << "\n ---- Параметры ---- \n\n-in: " << in_text
+		*log << "\n ---- Параметры ---- \n\n-in: " << in_text
 			<< "\n-out: " << out_text
 			<< "\n-log: " << log_text << endl;
 	}
-	void WriteError(LOG log, Error::ERROR error) {
-		if (log.stream)
+	void WriteError(ostream* log, Error::ERROR error) {
+		if (log)
 		{
-			*log.stream << "\nОшибка " << error.id << ": " << error.message << " Строка " << error.inext.line << " позиция " << error.inext.col << endl;
+			*log << "\nОшибка " << error.id << ": " << error.message << " Строка " << error.inext.line << " позиция " << error.inext.col << endl;
 			//Close(log);
 		}
 			cout << "\nОшибка " << error.id << ": " << error.message << " Строка " << error.inext.line << " позиция " << error.inext.col << endl;

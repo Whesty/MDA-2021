@@ -51,14 +51,12 @@ namespace LT
 		entry.sn = line;
 		return entry;
 	}
-	void showTable(LexTable lextable, Parm::PARM parm) {
+	void showTable(LexTable lextable, ostream* fout) {
 
-		std::fstream fout;
-		fout.open(parm.out, std::ios::app);//ios::app - дописыввать в конец файла
-		if (!fout.is_open())
-			throw ERROR_THROW(110);
-		fout << "\n--------------------------------------";
-		fout << "\n01 ";
+		
+		
+		*fout << "\n-----------------Преобразованный исходный код---------------------";
+		*fout << "\n01 ";
 
 		int number = 1;
 		for (int i = 0; i < lextable.size; i++)
@@ -68,15 +66,15 @@ namespace LT
 			//	while (lextable.table[i].sn - number > 1)	// пока не дойдём до последней строки
 			//		number++;
 				if (number < 9)
-					fout << std::endl << '0' << lextable.table[i].sn << ' ';
+					*fout << std::endl << '0' << lextable.table[i].sn << ' ';
 				else
-					fout << std::endl << lextable.table[i].sn << ' ';
+					*fout << std::endl << lextable.table[i].sn << ' ';
 				//fout << '%';
 				number = lextable.table[i].sn;
 			}
-			fout << lextable.table[i].lexema;
+			*fout << lextable.table[i].lexema;
 			if (lextable.table[i].lexema == LEX_ID || lextable.table[i].lexema == LEX_OPERATOR || lextable.table[i].lexema == LEX_LITERAL)
-				fout << "<" << lextable.table[i].idxTI << ">";
+				*fout << "<" << lextable.table[i].idxTI << ">";
 		}
 
 		

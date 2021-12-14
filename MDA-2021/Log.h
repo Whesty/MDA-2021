@@ -6,6 +6,7 @@
 #include "Parm.h"
 #include <iostream>
 #include <fstream>
+using namespace std;
 namespace Log
 {
 	struct LOG
@@ -16,12 +17,12 @@ namespace Log
 
 	static const LOG INITLOG = { L"", NULL };
 	LOG getlog(wchar_t logfile[]);
-	void WriteLine(LOG log, const char* c, ...);
-	void WriteLine(LOG log, const wchar_t* c, ...);
-	void WriteLog(LOG log);
-	void WriteParm(LOG log, Parm::PARM parm);
-	void WriteIn(LOG log, In::IN in);
-	void WriteError(LOG log, Error::ERROR error);
+	void WriteLine(ostream* log, const char* c, ...);
+	void WriteLine(ostream* log, const wchar_t* c, ...);
+	void WriteLog(ostream* log);
+	void WriteParm(ostream* log, Parm::PARM parm);
+	void WriteIn(ostream* log, In::IN in);
+	void WriteError(ostream* log, Error::ERROR error);
 	void Close(LOG log);
 	void writelex(In::IN in);
 };

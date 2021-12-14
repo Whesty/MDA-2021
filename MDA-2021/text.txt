@@ -5,6 +5,11 @@ bangou res;
 	^{ res = y;}
 	return res;
 }
+void func sum(bangou x, bangou y){
+	x = x+y;
+	runout x;
+	return;
+}
 main
 {
 	rain hi = "Hello World!";
@@ -23,7 +28,9 @@ main
 	i=0;
 	}
 	^ {runout "false";}
-	bangou sum = 2 + 3 + 4 + 5/2*7+9;
-	runout sum;
+	bangou sum_ = 2 + 3 + 4 + 5/2*7+9;
+	runout sum_;
+	runout "Sum: ";
+	sum(2, 4);
 	return;
 }

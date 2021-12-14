@@ -260,7 +260,7 @@ namespace Lex {
 						LT::Add(lextable, entryLT);
 						continue;
 					}
-					if (!newindf) Log::WriteError(log, Error::geterrorin(300, line, position));
+					if (!newindf) Log::WriteError(log.stream, Error::geterrorin(300, line, position));
 				}
 				// Если ничего из выше перечисленного не было заданно
 				LT::Entry entryLT = LT::writeEntry(entryLT, LEX_ID, indexID++, line);// Задаем в таблицу лексем
@@ -391,7 +391,7 @@ namespace Lex {
 			if (FST::execute(fstLiteralString)) {
 
 				int length = _mbslen(word[i]);// Избавляемся от ковычек
-				if(length==2)  WriteError(log, Error::geterrorin(310, line, position));
+				if(length==2) Log::WriteError(log.stream, Error::geterrorin(310, line, position));
 				if(length > MAX_RAIN) throw  ERROR_THROW_IN(202, line, position);
 				for (int k = 0; k < length; k++)
 					word[i][k] = word[i][k + 1];
@@ -536,7 +536,7 @@ namespace Lex {
 			{
 				LT::Entry entryLT = writeEntry(entryLT, word[i][0], LT_TI_NULLIDX, line);
 					LT::Add(lextable, entryLT);
-					WriteError(log, Error::geterrorin(311, line, position));
+					Log::WriteError(log.stream, Error::geterrorin(311, line, position));
 					continue;
 			}
 
@@ -554,12 +554,12 @@ namespace Lex {
 					indexLex--;
 					continue;
 				}
-			 WriteError(log, Error::geterrorin(201, line, position));
+				Log::WriteError(log.stream, Error::geterrorin(201, line, position));
 		}
 		lex.idtable = idtable;
 		lex.lextable = lextable;
-		if(count_main>1) Log::WriteError(log, Error::geterror(302));
-		if(count_main==0) Log::WriteError(log, Error::geterror(301));
+		if(count_main>1) Log::WriteError(log.stream, Error::geterror(302));
+		if(count_main==0) Log::WriteError(log.stream, Error::geterror(301));
 		return lex;
 	}
 

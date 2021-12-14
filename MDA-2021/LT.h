@@ -76,6 +76,6 @@ namespace LT		// таблица лексем
 		int line
 	);
 	void writeLexTable(std::ostream* stream, LT::LexTable& lextable);
-	void showTable(LexTable lextable, Parm::PARM parm);	// вывод таблицы лексем
+	void showTable(LexTable lextable, std::ostream *fout);	// вывод таблицы лексем
 
 };

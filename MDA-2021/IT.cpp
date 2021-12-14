@@ -38,44 +38,44 @@ namespace IT {
 
 	}
 
-	void showITable(IdTable& table, Log::LOG log)
+	void showITable(IdTable& table, ostream* log)
 	{
 		//std::fstream *log.stream;
 		//*log.stream.open(parm.log, std::ios::app);//ios::app - дописыввать в конец файла
-		*log.stream << "------------------Таблица индетификаторов------------------" << endl << endl;
-		*log.stream << "№     | Имя        | тип данных | тип индитификатора  | первое вхождение | содержание " << endl;
+		*log << "------------------Таблица индетификаторов------------------" << endl << endl;
+		*log << "№     | Имя        | тип данных | тип индитификатора  | первое вхождение | содержание " << endl;
 		for (int i = 0; i < table.size; i++) {
-			*log.stream << setw(6) << left <<i + 1  << "| ";
-			*log.stream << setw(11) << left << table.table[i].id << "| ";
-			if (table.table[i].idtype == OP || table.table[i].idtype == LO) *log.stream << setw(10) << left << "-" << " | ";
+			*log << setw(6) << left <<i + 1  << "| ";
+			*log << setw(11) << left << table.table[i].id << "| ";
+			if (table.table[i].idtype == OP || table.table[i].idtype == LO) *log << setw(10) << left << "-" << " | ";
 			else
 				if (table.table[i].iddatatype == INT) {
-					*log.stream << setw(10) << left << "bangou" << " | ";
+					*log << setw(10) << left << "bangou" << " | ";
 				}
-				else if (table.table[i].iddatatype == STR)  *log.stream << setw(10) << left << "rain" << " | ";
-				else if (table.table[i].iddatatype == VOI) *log.stream << setw(10) << left << "void" << " | ";
-				else *log.stream << setw(10) << left << "bangou(16)" << " | ";
+				else if (table.table[i].iddatatype == STR)  *log << setw(10) << left << "rain" << " | ";
+				else if (table.table[i].iddatatype == VOI) *log << setw(10) << left << "void" << " | ";
+				else *log << setw(10) << left << "bangou(16)" << " | ";
 			switch (table.table[i].idtype)
 			{
-			case L: {*log.stream << setw(19) << left << "Литерал" << " | "; break; }
-			case V: {*log.stream << setw(19) << left << "Переменная" << " | "; break; }
-			case P: {*log.stream << setw(19) << left << "Параметр" << " | "; break; }
-			case F: {*log.stream << setw(8) << left << "Функция " << setw(11) << right << table.table->parm << " | "; break; }
-			case OP: {*log.stream << setw(19) << left << "Оператор" << " | "; break; }
-			case LO: {*log.stream << setw(19) << left << "Логический оператор" << " | "; break; }
+			case L: {*log << setw(19) << left << "Литерал" << " | "; break; }
+			case V: {*log << setw(19) << left << "Переменная" << " | "; break; }
+			case P: {*log << setw(19) << left << "Параметр" << " | "; break; }
+			case F: {*log << setw(8) << left << "Функция " << setw(11) << right << table.table->parm << " | "; break; }
+			case OP: {*log << setw(19) << left << "Оператор" << " | "; break; }
+			case LO: {*log << setw(19) << left << "Логический оператор" << " | "; break; }
 			default:
 				break;
 			}
-			*log.stream << setw(16) << left << table.table[i].idxfirstLE << " | ";
+			*log << setw(16) << left << table.table[i].idxfirstLE << " | ";
 			if (table.table[i].idtype == L) {
 				if (table.table[i].iddatatype == INT) {
-					*log.stream << table.table[i].value.vint;
+					*log << table.table[i].value.vint;
 				}
-				else if (table.table[i].iddatatype == STR) *log.stream << '[' << table.table[i].value.vstr.len << ']' << table.table[i].value.vstr.str;
-				else if (table.table[i].iddatatype == INT16) *log.stream << table.table[i].value.vstr.str;
+				else if (table.table[i].iddatatype == STR) *log << '[' << table.table[i].value.vstr.len << ']' << table.table[i].value.vstr.str;
+				else if (table.table[i].iddatatype == INT16) *log << table.table[i].value.vstr.str;
 			}
-			else *log.stream << "-";
-			*log.stream << endl;
+			else *log << "-";
+			*log << endl;
 		}
 	}
 

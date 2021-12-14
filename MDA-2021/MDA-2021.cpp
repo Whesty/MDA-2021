@@ -8,17 +8,43 @@ int wmain(int argc, wchar_t* argv[]) {
 	{
 		Parm::PARM parm = Parm::getparm(argc, argv);
 		log = Log::getlog(parm.log);
-		Log::WriteLine(log, "Тест: ", "без ошибок ", "");
-		Log::WriteLog(log);
-		Log::WriteParm(log, parm);
+		Log::WriteLine(log.stream, "Тест: ", "без ошибок ", "");
+		if(parm.more)
+			Log::WriteLine(&std::cout, "Тест: ", "без ошибок ", "");
+		Log::WriteLog(log.stream);
+		if (parm.more)
+			Log::WriteLog(&std::cout);
+
+		Log::WriteParm(log.stream, parm);
+		if (parm.more)
+			Log::WriteParm(&std::cout, parm);
+
 		In::IN in = In::getin(parm.in);
-		Log::WriteIn(log, in);
+		Log::WriteIn(log.stream, in);
+		if (parm.more)
+			Log::WriteIn(&std::cout, in);
+
 		Lex::LEX lex = Lex::lexAnaliz(log, in);
-		LT::showTable(lex.lextable, parm);
+		std::fstream fout;
+		fout.open(parm.out, std::ios::app);//ios::app - дописыввать в конец файла
+		if (!fout.is_open())
+			throw ERROR_THROW(110);
+		LT::showTable(lex.lextable, &fout);
+		if (parm.more || parm.Lout)
+		LT::showTable(lex.lextable, &std::cout);
+
 		LT::writeLexTable(log.stream, lex.lextable);
-		IT::showITable(lex.idtable, log);
+		if (parm.more || parm.lt)
+			LT::writeLexTable( &std::cout, lex.lextable);
+
+		IT::showITable(lex.idtable, log.stream);
+		if (parm.more || parm.it)
+			IT::showITable(lex.idtable, &std::cout);
+
 		MFST::Mfst mfst(lex.lextable, GRB::getGreibach());//Автомат
 		mfst.log = log;
+		if (parm.more || parm.lenta)
+			mfst.more = true;
 		//Старт синтаксического анализа
 		if (mfst.start()) {
 			cout << "Синтаксический выполнен без ошибок" << endl;
@@ -34,7 +60,7 @@ int wmain(int argc, wchar_t* argv[]) {
 		bool polish_ok = Polish::PolishNotation(lex, log);					//выполнить преобразование выражений в ПОЛИЗ
 		if (!polish_ok)
 		{
-			Log::WriteLine(log, "Ошибка при попытке преобразования выражения", "");
+			Log::WriteLine(log.stream, "Ошибка при попытке преобразования выражения", "");
 			cout << "Ошибка при попытке преобразования выражения" << endl << "Выполнение программы остановлено" << endl;
 			return 0;
 		}
@@ -51,7 +77,7 @@ int wmain(int argc, wchar_t* argv[]) {
 	{
 		cout << endl;
 		cout << "Завершилось с ошибкой\n\n";
-		Log::WriteError(log, e);
+		Log::WriteError(log.stream, e);
 		return 0;
 	}
 }

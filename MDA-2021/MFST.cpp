@@ -59,11 +59,20 @@ namespace MFST {
 					GRB::Rule::Chain chain;
 					if ((nrulechain = rule.getNextChain(lenta[lenta_position], chain, nrulechain + 1)) >= 0) {
 						MFST_TRACE1
+							if(more) 
+								MFST_TRACE1_M
+
 							savestate(); st.pop(); push_chain(chain); rc = NS_OK;
 						MFST_TRACE2
+							if (more)
+								MFST_TRACE2_M
+
 					}
 					else {
 						MFST_TRACE4("NS_NRCHAIN/NS_NR")
+							if (more)
+								MFST_TRACE4_M("NS_NRCHAIN/NS_NR")
+
 							saveddiagnosis(NS_NORULECHAIN); rc = resetstate() ? NS_NORULECHAIN : NS_NORULE;
 					}
 				}
@@ -72,14 +81,21 @@ namespace MFST {
 			else if (st.top() == lenta[lenta_position]) {
 				lenta_position++; st.pop(); nrulechain = -1; rc = TS_OK;
 				MFST_TRACE3
+					if (more)
+						MFST_TRACE3_M
+
 			}
 			else {
 				MFST_TRACE4(TS_NOK / NS_NORULECHAIN) rc = resetstate() ? TS_NOK : NS_NORULECHAIN;
+				if (more) MFST_TRACE4_M(TS_NOK / NS_NORULECHAIN)
+
 			}
 		}
 		else {
 			rc = LENTA_END;
 			MFST_TRACE4(LENTA_END);
+			if (more)
+				MFST_TRACE4_M(LENTA_END);
 		}
 
 		return rc;
@@ -94,6 +110,9 @@ namespace MFST {
 	bool Mfst::savestate() {
 		storestate.push(MfstState(lenta_position, st, nrule, nrulechain));
 		MFST_TRACE6("SAVESTATE:", storestate.size());
+		if (more)
+			MFST_TRACE6_M("SAVESTATE:", storestate.size());
+
 		return true;
 	}
 
@@ -109,6 +128,11 @@ namespace MFST {
 			storestate.pop();
 			MFST_TRACE5("RESSTATE")
 				MFST_TRACE2
+				if (more) {
+					MFST_TRACE5_M("RESSTATE")
+						MFST_TRACE2_M
+				}
+
 		}
 
 		return rc;
@@ -137,6 +161,10 @@ namespace MFST {
 		char buf[MFST_DIAGN_MAXSIZE]{};
 		MFST_TRACE_START_0
 		MFST_TRACE_START
+			if (more) {
+				MFST_TRACE_START_0_M
+					MFST_TRACE_START_M
+			}
 		rc_step = step();
 		while (rc_step == NS_OK || rc_step == NS_NORULECHAIN || rc_step == TS_OK || rc_step == TS_NOK)
 			rc_step = step();
@@ -144,24 +172,43 @@ namespace MFST {
 		switch (rc_step) {
 		case LENTA_END:
 			MFST_TRACE4("------>LENTA_END")
-				*log.stream << "------------------------------------------------------------------------------------------" << std::endl;
+				if (more) {
+					MFST_TRACE4_M("------>LENTA_END")
+						std::cout << "------------------------------------------------------------------------------------------" << std::endl;
+				}
+					*log.stream << "------------------------------------------------------------------------------------------" << std::endl;
 			sprintf_s(buf, MFST_DIAGN_MAXSIZE, "%d: всего строк %d, синтаксический анализ выполнен без ошибок", 0, lex.table[lex.size - 1].sn);
 			std::cout << "всего строк " << lex.table[lex.size - 1].sn << ", синтаксический анализ выполнен без ошибок" << std::endl;
 			rc = true;
 			break;
 		case NS_NORULE:
 			MFST_TRACE4("------>NS_NORULE")
+				if (more) {
+					MFST_TRACE4_M("------>NS_NORULE")
+						std::cout << "------------------------------------------------------------------------------------------" << std::endl;
+				}
+
 				*log.stream << "------------------------------------------------------------------------------------------" << std::endl;
 			std::cout << getDiagnosis(0, buf) << std::endl;
 			std::cout << getDiagnosis(1, buf) << std::endl;
 			std::cout << getDiagnosis(2, buf) << std::endl;
 			break;
 		case NS_NORULECHAIN:
-			MFST_TRACE4("------>NS_NORULECHAIN") break;
+			MFST_TRACE4("------>NS_NORULECHAIN")
+				if (more)
+					MFST_TRACE4_M("------>NS_NORULECHAIN")
+				break;
 		case NS_ERROR:
-			MFST_TRACE4("------>NS_ERROR") break;
+			MFST_TRACE4("------>NS_ERROR") 
+				if (more)
+					MFST_TRACE4_M("------>NS_ERROR")
+				break;
 		case SURPRISE:
-			MFST_TRACE4("------>NS_SURPRISE") break;
+			MFST_TRACE4("------>NS_SURPRISE") 
+				if (more)
+					MFST_TRACE4_M("------>NS_SURPRISE")
+
+				break;
 		}
 
 		return rc;
@@ -208,6 +255,9 @@ namespace MFST {
 			state = storestate.c[i];
 			rule = greibach.getRule(state.nrule);
 			MFST_TRACE7
+				if (more)
+					MFST_TRACE7_M
+
 		}
 	}
 
