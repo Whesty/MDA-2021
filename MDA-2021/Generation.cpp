@@ -98,6 +98,7 @@ namespace Gener
 			} // цикл вычислени€
 
 			str = str + "\npop ebx\nmov " + reinterpret_cast<char*>(e1.id) + ", ebx\n";			// вычисленное выражение в ebx 
+			//cout << str;
 			break;
 		}
 		case IT::IDDATATYPE::STR:// разрешить присваивать строкам только строки, литералы и вызовы функций
@@ -170,8 +171,8 @@ namespace Gener
 								 //str = str + "pop ebx \npop eax \nmov cl, bl \nshl eax, cl\npush eax\n"; break; }
 			}
 		} // цикл вычислени€
-
 		str = str + "\npop ebx\nmov " + napr + ", ebx\n";			// вычисленное выражение в ebx 
+		//cout << str;
 
 
 		return str;
@@ -307,6 +308,7 @@ namespace Gener
 		string str;
 		string buf;
 		bool r = false, l = false, w = false;
+		bool commbr = false;
 		for (int i = 0; i < tables.lextable.size; i++)
 		{
 			switch (LEXEMA(i))
@@ -328,6 +330,7 @@ namespace Gener
 				if(funcname != "main")
 				str = genExitCode(tables, i, funcname, pcount);
 				funcname = "main";
+				buf.clear();
 				break;
 			}
 			case LEX_ID: // вызов функции
@@ -387,6 +390,7 @@ namespace Gener
 					w = false;
 					r = true;
 				}
+				break;
 				//}
 				//case LEX_ROOF:		// поставить метки в конце кондишна
 				//{
@@ -412,6 +416,8 @@ namespace Gener
 			}
 			case LEX_ROOF: // условие неверно(метка)
 			{
+				str = str + "\njmp next" + itoS(conditionnum) + "\n";
+
 				str = str + "wrong" + itoS(conditionnum) + ":";
 				l = true;
 				break;
@@ -437,6 +443,7 @@ namespace Gener
 			case LEX_RUNOUT: // вывод
 			{
 				IT::Entry e = ITENTRY(i + 1);
+				if(e.idtype != IT::IDTYPE::F)
 				switch (e.iddatatype)
 				{
 				case IT::IDDATATYPE::INT: {
@@ -445,11 +452,28 @@ namespace Gener
 					break;
 				}
 				case IT::IDDATATYPE::STR:
-					if (e.idtype == IT::IDTYPE::L)  str = str + "\npush offset " + reinterpret_cast<char*>(e.id) + "\ncall outrad\n";
+					if (e.idtype == IT::IDTYPE::L)  str = str + "\nINVOKE outw, offset " + reinterpret_cast<char*>(e.id) + "\n";
 					else  str = str + "\nINVOKE outw, " + reinterpret_cast<char*>(e.id) + "\n";
 					break;
 				}
-				break;
+				else {
+					if (LEXEMA(i + 2) == LEX_LEFTTHESIS && LEXEMA(i) != LEX_FUNCTION) // не объ€вление, а вызов
+						str = genCallFuncCode(tables, log, i+1);
+					str = str + "push eax\n";
+					switch (e.iddatatype)
+					{
+					case IT::IDDATATYPE::INT: {
+						str = str + "\nmov result, eax	\nINVOKE int_to_char, offset result_str, result\n";
+						str = str + "INVOKE outw, offset result_str\n";
+						break;
+					}
+					case IT::IDDATATYPE::STR:
+						/*if (e.idtype == IT::IDTYPE::L) */ str = str + "\npush offset " + reinterpret_cast<char*>(e.id);
+						/*else*/  str = str + "\nINVOKE outw, " + reinterpret_cast<char*>(e.id) + "\n";
+						break;
+					}
+					break;
+				}
 			}
 
 			}

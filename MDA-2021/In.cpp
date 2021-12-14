@@ -126,11 +126,11 @@ namespace In
 
 		text[in.size] = '\0';
 		in.text = text;
-		int i = 0;
+		/*int i = 0;
 		while (i < st)
 		{
 			cout << i << '.' << word[i++] << endl;
-		}
+		}*/
 		in.word = word;
 		return in;
 	}

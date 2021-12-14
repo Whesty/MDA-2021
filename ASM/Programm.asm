@@ -14,22 +14,26 @@ stcmp PROTO : DWORD, : DWORD
 
 .const
 		newline byte 13, 10, 0
-L1 byte 'ÔÛÂÛûàûâà123423.ýþýæþáüþþ._=394832SFhsdfDSHh', 0
-L2 byte '134', 0
-L3 sdword -12
-L4 sdword 15
-L5 sdword -42
-L6 sdword 3
-L7 sdword 2
+L1 byte 'Hello World!', 0
+L2 sdword 0
+L3 sdword 1
+L4 sdword 5
+L5 byte 'i:', 0
+L6 sdword 2
+L7 sdword 8
+L8 byte 'true', 0
+L9 byte 'false', 0
+L10 sdword 3
+L11 sdword 4
+L12 sdword 7
+L13 sdword 9
 .data
 		temp sdword ?
 		buffer byte 256 dup(0)
-t dword ?
-tr dword ?
-a sdword 0
-w sdword 0
-b sdword 0
+maxres sdword 0
+hi dword ?
 i sdword 0
+sum sdword 0
 left dword ?
 rig dword ?
 result sdword ?
@@ -71,63 +75,19 @@ ret
 int_to_char ENDP
 
 
-;----------- fr ------------
-fr PROC,
-	frt : sdword, fre : dword  
+;----------- max ------------
+max PROC,
+	maxx : sdword, maxy : sdword  
 ; --- save registers ---
 push ebx
 push edx
 ; ----------------------
-mov eax, frt
-mov result, eax	
-INVOKE int_to_char, offset result_str, result
-INVOKE outw, offset result_str
-
-; --- restore registers ---
-pop edx
-pop ebx
-; -------------------------
-ret
-fr ENDP
-;------------------------------
-
-right0:
-
-;----------- MAIN ------------
-main PROC
-mov t, offset L1
-mov tr, offset L2
-push L3
-
-pop ebx
-mov a, ebx
-
-push L4
-
-pop ebx
-mov w, ebx
-
-push L5
-
-pop ebx
-mov b, ebx
-
-push a
-push b
-pop ebx
-pop eax
-add eax, ebx
-push eax
-
-pop ebx
-mov a, ebx
-
-push a
+push maxx
 
 pop ebx
 mov left, ebx
 
-push w
+push maxy
 
 pop ebx
 mov rig, ebx
@@ -135,38 +95,66 @@ mov rig, ebx
 mov edx, left
 cmp edx, rig
 
-jl right1
-jg wrong1
+jg right1
+jl wrong1
  right1:
-push w
-push a
-pop ebx
-pop eax
-sub eax, ebx
-push eax
+push maxx
 
 pop ebx
-mov a, ebx
+mov maxres, ebx
 
+
+jmp next1
 wrong1:
-push w
-push a
-pop ebx
-pop eax
-sub eax, ebx
-push eax
+push maxy
 
 pop ebx
-mov a, ebx
+mov maxres, ebx
+
+next1:
+; --- restore registers ---
+pop edx
+pop ebx
+; -------------------------
+mov eax, maxres
+ret
+max ENDP
+;------------------------------
 
 
-push t
+;----------- MAIN ------------
+main PROC
+mov hi, offset L1
+
+INVOKE outw, hi
+
+push L2
+
+pop ebx
+mov i, ebx
+
+cycle1:
+push i
+
+pop ebx
+mov left, ebx
+
+
+push hi
 call len
 push eax
 
-push tr
-call len
-push eax
+pop ebx
+mov rig, ebx
+
+mov edx, left
+cmp edx, rig
+
+jl cycle2
+jmp cyclenext2
+cycle2:
+push i
+push L3
 pop ebx
 pop eax
 add eax, ebx
@@ -175,80 +163,129 @@ push eax
 pop ebx
 mov i, ebx
 
-mov eax, i
+
+push L4
+push i
+call max
+push eax
+
 mov result, eax	
 INVOKE int_to_char, offset result_str, result
 INVOKE outw, offset result_str
 
 
-push t
-push a
-call fr
+push L4
+push i
+call max
 
-cycle1:
-push w
-push a
+push i
+
+pop ebx
+mov left, ebx
+
+push hi
+call len
+push eax
+
+pop ebx
+mov rig, ebx
+mov edx, left
+cmp edx, rig
+
+jl cycle2
+cyclenext2:
+
+INVOKE outw, offset L5
+
+mov eax, i
+mov result, eax	
+INVOKE int_to_char, offset result_str, result
+INVOKE outw, offset result_str
+
+push i
+push L6
 pop ebx
 pop eax
-sub eax, ebx
+cdq
+idiv ebx
 push eax
 
 pop ebx
 mov left, ebx
 
-push L6
-
-pop ebx
-mov rig, ebx
-
-mov edx, left
-cmp edx, rig
-
-jg cycle2
-jmp cyclenext2
-cycle2:
-push a
-push w
-pop ebx
-pop eax
-add eax, ebx
-push eax
+push L4
+push L3
 push L7
 pop ebx
 pop eax
+imul eax, ebx
+push eax
+pop ebx
+pop eax
 add eax, ebx
 push eax
 
 pop ebx
-mov a, ebx
-
-push a
-
-pop ebx
-mov left, ebx
-push w
-
-pop ebx
 mov rig, ebx
-push w
-push a
-pop ebx
-pop eax
-sub eax, ebx
-push eax
 
-pop ebx
-mov left, ebx
-push L6
-
-pop ebx
-mov rig, ebx
 mov edx, left
 cmp edx, rig
 
-jg cycle2
-cyclenext2:
-mov eax, a
+jg right3
+jl wrong3
+ right3:
+
+INVOKE outw, offset L8
+
+push L2
+
+pop ebx
+mov i, ebx
+
+
+jmp next3
+wrong3:
+
+INVOKE outw, offset L9
+
+next3:
+push L6
+push L10
+pop ebx
+pop eax
+add eax, ebx
+push eax
+push L11
+pop ebx
+pop eax
+add eax, ebx
+push eax
+push L4
+push L6
+pop ebx
+pop eax
+cdq
+idiv ebx
+push eax
+push L12
+pop ebx
+pop eax
+imul eax, ebx
+push eax
+pop ebx
+pop eax
+add eax, ebx
+push eax
+push L13
+pop ebx
+pop eax
+add eax, ebx
+push eax
+
+pop ebx
+mov sum, ebx
+
+mov eax, sum
 mov result, eax	
 INVOKE int_to_char, offset result_str, result
 INVOKE outw, offset result_str

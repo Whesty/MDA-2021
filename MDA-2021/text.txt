@@ -1,25 +1,29 @@
-void func fr(bangou t, rain e){
-	runout t;
-	return;
+bangou func max(bangou x, bangou y){
+bangou res;
+	if: x>y
+	{res = x;}
+	^{ res = y;}
+	return res;
 }
 main
 {
-	rain t = "ÔÛÂÛûàûâà123423.ışıæşáüşş._=394832SFhsdfDSHh";
-	rain tr = "134";
-	bangou a = -12;
-	bangou w = 15;
-	bangou b = -16x2A;
-	a = a + b;
-	if: a<w 
-	a = w - a;
-	^ a = w - a;
-	bangou i = len(t) + len(tr);
-	runout i;
-	fr(a, t);
-	for: w-a>(3)
+	rain hi = "Hello World!";
+	runout hi;
+	bangou i = 0;
+	for: i<len(hi)
 	{
-	 a = a + (w+2);
+	i = i + 1;
+	runout max(i, 5);
 	}
-	runout a;
+	runout "i:";
+	runout i;
+	if: i/2>5+1*8
+	{
+	runout "true";
+	i=0;
+	}
+	^ {runout "false";}
+	bangou sum = 2 + 3 + 4 + 5/2*7+9;
+	runout sum;
 	return;
 }

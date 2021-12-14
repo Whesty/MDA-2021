@@ -19,10 +19,18 @@ int wmain(int argc, wchar_t* argv[]) {
 		IT::showITable(lex.idtable, log);
 		MFST::Mfst mfst(lex.lextable, GRB::getGreibach());//Автомат
 		mfst.log = log;
-		mfst.start(); //Старт синтаксического анализа
+		//Старт синтаксического анализа
+		if (mfst.start()) {
+			cout << "Синтаксический выполнен без ошибок" << endl;
+		}
+		else {
+			cout << "Найденны ошибки в коде" << endl;
+			return 0;
+		}
 		mfst.savededucation(); // Сохранить вывести правила вывода
 		mfst.printrules(); // Отладка: вывести правила вывода
 		if (Sem::SemAnaliz(lex.lextable, lex.idtable, log)) cout << "Сематичский анализ выполнен без ошибок" << endl;
+
 		bool polish_ok = Polish::PolishNotation(lex, log);					//выполнить преобразование выражений в ПОЛИЗ
 		if (!polish_ok)
 		{
@@ -34,9 +42,9 @@ int wmain(int argc, wchar_t* argv[]) {
 
 		LT::writeLexTable(log.stream, lex.lextable);
 		Gener::CodeGeneration(lex, parm, log);
-		//preabr(lex.lextable, lex.idtable);
-		//ShowPN(lex.lextable, lex.idtable);
 		Log::Close(log);
+		//system("..\\Debug\\Asm.exe");
+		system("Asm.exe");
 		return 0;
 	}
 	catch (Error::ERROR e)
