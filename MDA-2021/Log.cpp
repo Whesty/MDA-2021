@@ -83,10 +83,10 @@ namespace Log {
 	void WriteError(ostream* log, Error::ERROR error) {
 		if (log)
 		{
-			*log << "\nОшибка " << error.id << ": " << error.message << " Строка " << error.inext.line << " позиция " << error.inext.col << endl;
+			*log << "\nОшибка " << error.id << ": " << error.message << " cтрока " << error.inext.line << " позиция " << error.inext.col << endl;
 			//Close(log);
 		}
-			cout << "\nОшибка " << error.id << ": " << error.message << " Строка " << error.inext.line << " позиция " << error.inext.col << endl;
+			cout << "\nОшибка " << error.id << ": " << error.message << " cтрока " << error.inext.line << " позиция " << error.inext.col << endl;
 	}
 	void Close(LOG log) {
 		log.stream->close();

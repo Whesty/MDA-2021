@@ -2,7 +2,7 @@
 .model flat, stdcall
 includelib libucrt.lib
 includelib kernel32.lib
-includelib "../Debug/Lib.lib
+includelib "../Debug/Lib.lib"
 ExitProcess PROTO:DWORD 
 .stack 4096
 
@@ -27,13 +27,14 @@ L10 sdword 3
 L11 sdword 4
 L12 sdword 7
 L13 sdword 9
+L14 byte 'Sum: ', 0
 .data
 		temp sdword ?
 		buffer byte 256 dup(0)
 maxres sdword 0
 hi dword ?
 i sdword 0
-sum sdword 0
+sum1 sdword 0
 left dword ?
 rig dword ?
 result sdword ?
@@ -119,6 +120,37 @@ pop ebx
 mov eax, maxres
 ret
 max ENDP
+;------------------------------
+
+
+;----------- sum ------------
+sum PROC,
+	sumx : sdword, sumy : sdword  
+; --- save registers ---
+push ebx
+push edx
+; ----------------------
+push sumx
+push sumy
+pop ebx
+pop eax
+add eax, ebx
+push eax
+
+pop ebx
+mov sumx, ebx
+
+mov eax, sumx
+mov result, eax	
+INVOKE int_to_char, offset result_str, result
+INVOKE outw, offset result_str
+
+; --- restore registers ---
+pop edx
+pop ebx
+; -------------------------
+ret
+sum ENDP
 ;------------------------------
 
 
@@ -283,12 +315,20 @@ add eax, ebx
 push eax
 
 pop ebx
-mov sum, ebx
+mov sum1, ebx
 
-mov eax, sum
+mov eax, sum1
 mov result, eax	
 INVOKE int_to_char, offset result_str, result
 INVOKE outw, offset result_str
+
+
+INVOKE outw, offset L14
+
+
+push L11
+push L6
+call sum
 
 INVOKE ExitProcess,0
 main ENDP

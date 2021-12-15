@@ -70,7 +70,8 @@ int wmain(int argc, wchar_t* argv[]) {
 		Gener::CodeGeneration(lex, parm, log);
 		Log::Close(log);
 		//system("..\\Debug\\Asm.exe");
-		system("Asm.exe");
+		system("msbuild.exe ..\\ASM /t:build  /p:cfg=\"release | x86 -v:m\"");
+		system("..\\ASM\\Debug\\Asm.exe");
 		return 0;
 	}
 	catch (Error::ERROR e)

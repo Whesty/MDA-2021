@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include <iostream>
 //показываем что это вызов функции как на языке C
 
 extern "C"
