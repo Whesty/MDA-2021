@@ -14,20 +14,23 @@ stcmp PROTO : DWORD, : DWORD
 
 .const
 		newline byte 13, 10, 0
-L1 byte 'Hello World!', 0
-L2 sdword 0
-L3 sdword 1
-L4 sdword 5
-L5 byte 'i:', 0
-L6 sdword 2
-L7 sdword 8
-L8 byte 'true', 0
-L9 byte 'false', 0
-L10 sdword 3
-L11 sdword 4
-L12 sdword 7
-L13 sdword 9
-L14 byte 'Sum: ', 0
+L1 byte 'Hello World', 0
+L2 byte 'hi:', 0
+L3 sdword 0
+L4 byte 'len(hi)', 0
+L5 sdword 1
+L6 sdword 5
+L7 byte 'i:', 0
+L8 byte 'i/2>5+1*8:', 0
+L9 sdword 2
+L10 sdword 8
+L11 byte 'true', 0
+L12 byte 'false', 0
+L13 sdword 3
+L14 sdword 4
+L15 sdword 7
+L16 sdword 9
+L17 byte 'Sum(2, 4): ', 0
 .data
 		temp sdword ?
 		buffer byte 256 dup(0)
@@ -158,12 +161,31 @@ sum ENDP
 main PROC
 mov hi, offset L1
 
+INVOKE outw, offset L2
+
+
 INVOKE outw, hi
 
-push L2
+push L3
 
 pop ebx
 mov i, ebx
+
+
+INVOKE outw, offset L4
+
+
+push hi
+call len
+push eax
+
+mov result, eax	
+INVOKE int_to_char, offset result_str, result
+INVOKE outw, offset result_str
+
+
+push hi
+call len
 
 cycle1:
 push i
@@ -186,7 +208,7 @@ jl cycle2
 jmp cyclenext2
 cycle2:
 push i
-push L3
+push L5
 pop ebx
 pop eax
 add eax, ebx
@@ -194,21 +216,6 @@ push eax
 
 pop ebx
 mov i, ebx
-
-
-push L4
-push i
-call max
-push eax
-
-mov result, eax	
-INVOKE int_to_char, offset result_str, result
-INVOKE outw, offset result_str
-
-
-push L4
-push i
-call max
 
 push i
 
@@ -227,15 +234,33 @@ cmp edx, rig
 jl cycle2
 cyclenext2:
 
-INVOKE outw, offset L5
+push L6
+push i
+call max
+push eax
+
+mov result, eax	
+INVOKE int_to_char, offset result_str, result
+INVOKE outw, offset result_str
+
+
+push L6
+push i
+call max
+
+
+INVOKE outw, offset L7
 
 mov eax, i
 mov result, eax	
 INVOKE int_to_char, offset result_str, result
 INVOKE outw, offset result_str
 
+
+INVOKE outw, offset L8
+
 push i
-push L6
+push L9
 pop ebx
 pop eax
 cdq
@@ -245,9 +270,9 @@ push eax
 pop ebx
 mov left, ebx
 
-push L4
-push L3
-push L7
+push L6
+push L5
+push L10
 pop ebx
 pop eax
 imul eax, ebx
@@ -267,9 +292,9 @@ jg right3
 jl wrong3
  right3:
 
-INVOKE outw, offset L8
+INVOKE outw, offset L11
 
-push L2
+push L3
 
 pop ebx
 mov i, ebx
@@ -278,28 +303,28 @@ mov i, ebx
 jmp next3
 wrong3:
 
-INVOKE outw, offset L9
+INVOKE outw, offset L12
 
 next3:
-push L6
-push L10
+push L9
+push L13
 pop ebx
 pop eax
 add eax, ebx
 push eax
-push L11
+push L14
 pop ebx
 pop eax
 add eax, ebx
 push eax
-push L4
 push L6
+push L9
 pop ebx
 pop eax
 cdq
 idiv ebx
 push eax
-push L12
+push L15
 pop ebx
 pop eax
 imul eax, ebx
@@ -308,7 +333,7 @@ pop ebx
 pop eax
 add eax, ebx
 push eax
-push L13
+push L16
 pop ebx
 pop eax
 add eax, ebx
@@ -323,13 +348,13 @@ INVOKE int_to_char, offset result_str, result
 INVOKE outw, offset result_str
 
 
-INVOKE outw, offset L14
+INVOKE outw, offset L17
 
 
-push L11
-push L6
+push L14
+push L9
 call sum
 
-INVOKE ExitProcess,0
+INVOKE ExitProcess
 main ENDP
 end main

@@ -47,37 +47,37 @@ int wmain(int argc, wchar_t* argv[]) {
 			mfst.more = true;
 		//Старт синтаксического анализа
 		if (mfst.start()) {
-			cout << "Синтаксический выполнен без ошибок" << endl;
+			cout << "-----Синтаксический выполнен без ошибок\n" << endl;
 		}
 		else {
-			cout << "Найденны ошибки в коде" << endl;
+			cout << "-----Найденны ошибки в коде\n" << endl;
 			return 0;
 		}
 		mfst.savededucation(); // Сохранить вывести правила вывода
 		mfst.printrules(); // Отладка: вывести правила вывода
-		if (Sem::SemAnaliz(lex.lextable, lex.idtable, log)) cout << "Сематичский анализ выполнен без ошибок" << endl;
+		if (Sem::SemAnaliz(lex.lextable, lex.idtable, log)) cout << "-----Сематичский анализ выполнен без ошибок\n" << endl;
 
 		bool polish_ok = Polish::PolishNotation(lex, log);					//выполнить преобразование выражений в ПОЛИЗ
 		if (!polish_ok)
 		{
-			Log::WriteLine(log.stream, "Ошибка при попытке преобразования выражения", "");
-			cout << "Ошибка при попытке преобразования выражения" << endl << "Выполнение программы остановлено" << endl;
+			Log::WriteLine(log.stream, "-----Ошибка при попытке преобразования выражения\n", "");
+			cout <<"-----Ошибка при попытке преобразования выражения\n" << endl <<  "-----Выполнение программы остановлено\n" << endl;
 			return 0;
 		}
-		else cout << "Преобразование выражений завершено без ошибок" << endl;
+		else cout << "-----Преобразование выражений завершено без ошибок\n" << endl;
 
 		LT::writeLexTable(log.stream, lex.lextable);
 		Gener::CodeGeneration(lex, parm, log);
 		Log::Close(log);
-		//system("..\\Debug\\Asm.exe");
-		system("msbuild.exe ..\\ASM /t:build  /p:cfg=\"release | x86 -v:m\"");
+		system("msbuild.exe ..\\ASM /t:build  /p:cfg=\"release | x86 -v:q\"");
 		system("..\\ASM\\Debug\\Asm.exe");
+		//system("..\\Debug\\Asm.exe");
 		return 0;
 	}
 	catch (Error::ERROR e)
 	{
 		cout << endl;
-		cout << "Завершилось с ошибкой\n\n";
+		cout << "-----Завершилось с ошибкой\n\n";
 		Log::WriteError(log.stream, e);
 		return 0;
 	}
