@@ -270,7 +270,6 @@ namespace Gener
 				switch (e.iddatatype)
 				{
 				case IT::IDDATATYPE::INT:  str = str + " sdword " + itoS(e.value.vint);  break;
-				case IT::IDDATATYPE::INT16:  str = str + " sdword " + itoS(e.value.vint);  break;
 				case IT::IDDATATYPE::STR:  str = str + " byte '" + reinterpret_cast<char*>(e.value.vstr.str) + "', 0";  break;
 				}
 				vlt.push_back(str);
@@ -282,7 +281,6 @@ namespace Gener
 					case IT::IDDATATYPE::INT: {
 
 						str = str + " sdword 0";  break; }
-				case IT::IDDATATYPE::INT16: str = str + " sdword 0";  break;
 				case IT::IDDATATYPE::STR: str = str + " dword ?";  break;
 				}
 				vid.push_back(str);

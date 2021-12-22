@@ -184,7 +184,7 @@ namespace Lex {
 				_mbscpy(entryIT.id, source);// Имя индентификатора
 				IT::Add(idtable, entryIT);
 				indexID = indexID + 1;
-
+				entryIT = bufentry;
 				continue;
 			}
 			FST::FST fstCmp(word[i], FST_CMP);
@@ -227,6 +227,7 @@ namespace Lex {
 				_mbscpy(entryIT.id, source2);// Имя индентификатора
 				IT::Add(idtable, entryIT);
 				indexID = indexID + 2;
+				entryIT = bufentry;
 				continue;
 			}
 			FST::FST fstCOMP(word[i], FST_COMP);
@@ -269,17 +270,22 @@ namespace Lex {
 				_mbscpy(entryIT.id, source2);// Имя индентификатора
 				IT::Add(idtable, entryIT);
 				indexID = indexID + 2;
-				
+				entryIT = bufentry;
 				continue;
 			}
 			// Если это индитификатор (любое слово состоящие из букс цифр и знака подчеркивание)
 			FST::FST fstIdentif(word[i], FST_ID);
 			if (FST::execute(fstIdentif)) {
 				int length = _mbslen(word[i]);
-				if (length > 5) throw ERROR_THROW_IN(202, line, position);
+				if (length > 5) {
+					Log::WriteError(log, Error::geterrorin(202, line, position));
+				}
 				if (findFunc) {// Если до этого была лексема функции то это индитификатор функции
 					int idx = IT::IsId(idtable, word[i]);// Поиск функции в таблицы индентификаторов
 					if (idx != TI_NULLIDX) {
+						if(entryIT.iddatatype != IT::IDDATATYPE::NUL) {
+							Log::WriteError(log, Error::geterrorin(305, line, position));
+						}
 						LT::Entry entryLT = LT::writeEntry(entryLT, LEX_ID, idx, line);
 						LT::Add(lextable, entryLT);
 						findFunc = false;
@@ -290,6 +296,9 @@ namespace Lex {
 					int idx = IT::IsId(idtable, word[i]);// Ищем индентификатор в таблице индентификаторов
 
 					if (idx != TI_NULLIDX) {
+						if (entryIT.iddatatype != IT::IDDATATYPE::NUL) {
+							Log::WriteError(log, Error::geterrorin(305, line, position));
+						}
 						LT::Entry entryLT = LT::writeEntry(entryLT, LEX_ID, idx, line);
 						LT::Add(lextable, entryLT);
 						findFunc = false;
@@ -300,11 +309,14 @@ namespace Lex {
 					idx = IT::IsId(idtable, word[i]);
 					if (idx != TI_NULLIDX)
 					{
+						if (entryIT.iddatatype != IT::IDDATATYPE::NUL) {
+							Log::WriteError(log, Error::geterrorin(305, line, position));
+						}
 						LT::Entry entryLT = writeEntry(entryLT, LEX_ID, idx, line);
 						LT::Add(lextable, entryLT);
 						continue;
 					}
-					if (!newindf) Log::WriteError(log.stream, Error::geterrorin(300, line, position));
+					if (!newindf) Log::WriteError(log, Error::geterrorin(200, line, position));
 				}
 				// Если ничего из выше перечисленного не было заданно
 				LT::Entry entryLT = LT::writeEntry(entryLT, LEX_ID, indexID++, line);// Задаем в таблицу лексем
@@ -315,7 +327,9 @@ namespace Lex {
 				}
 				else if (!findFunc) {//Если это не функция то индитификатор
 					entryIT.idtype = IT::V;
-					if(entryIT.iddatatype == IT::NUL) throw ERROR_THROW_IN(303, line, position);
+					if (entryIT.iddatatype == IT::NUL) {
+						Log::WriteError(log, Error::geterrorin(303, line, position));
+					}
 					if (entryIT.iddatatype == IT::INT)// Если ранее была лексема integer
 						entryIT.value.vint = TI_INT_DEFAULT;
 					else
@@ -332,6 +346,7 @@ namespace Lex {
 				entryIT.idxfirstLE = indexLex;
 				_mbscpy(entryIT.id, word[i]);// Имя индентификатора
 				IT::Add(idtable, entryIT);
+				entryIT = bufentry;
 				if(findFunc)
 				Idx_Func_IT = IT::IsId(idtable, word[i]);
 				newindf = false;
@@ -343,8 +358,10 @@ namespace Lex {
 			FST::FST fstLiteralInt(word[i], FST_INTLIT);
 			if (FST::execute(fstLiteralInt)) {
 				int value = atoi((char*)word[i]);
-				if(value > MAX_BANGOU) throw ERROR_THROW_IN(202, line, position);
-				if(value < MIN_BANGOU) throw ERROR_THROW_IN(202, line, position);
+				if (value > MAX_BANGOU) {
+					Log::WriteError(log, Error::geterrorin(202, line, position)); }
+				if (value < MIN_BANGOU) { 
+					Log::WriteError(log, Error::geterrorin(202, line, position)); }
 				for (int k = 0; k < idtable.size; k++) {//Если значение было заданно раньше то добавляем её из таблицы индитифакоторов в таблицу лексем
 					if (idtable.table[k].iddatatype == IT::IDDATATYPE::INT && idtable.table[k].value.vint == value && idtable.table[k].idtype == IT::L) {
 						LT::Entry entryLT = LT::writeEntry(entryLT, LEX_LITERAL, k, line);
@@ -380,13 +397,15 @@ namespace Lex {
 				}
 				else
 					IT::Add(idtable, entryIT);
+					entryIT = bufentry;
 				continue;
 			}
 			// Литерал число в 16bit
 			FST::FST fstLiteralInt16(word[i], FST_INT16LIT);
 			if (FST::execute(fstLiteralInt16)) {
 				int length = _mbslen(word[i]);// Избавляемся от ковычек
-				if (length > 14) throw ERROR_THROW_IN(202, line, position);
+				if (length > 14) { 
+					Log::WriteError(log, Error::geterrorin(202, line, position));}
 				unsigned char* value = word[i];
 				for (int k = 0; k < idtable.size; k++) {//Если значение было заданно раньше то добавляем её из таблицы индитифакоторов в таблицу лексем
 					if (idtable.table[k].iddatatype == IT::IDDATATYPE::INT16 && idtable.table[k].value.vstr.str == value && idtable.table[k].idtype == IT::L) {
@@ -406,6 +425,7 @@ namespace Lex {
 					LT::Add(lextable, entryLT);
 				}
 				entryIT.iddatatype = IT::INT16;// Тип данных
+				entryIT.nums = 1;
 				entryIT.idtype = IT::L;// Тип индитификатора
 				_mbscpy(entryIT.value.vstr.str, word[i]); // Значение
 				entryIT.value.vint = IntinInt16(word[i]);
@@ -427,6 +447,7 @@ namespace Lex {
 				}
 				else
 					IT::Add(idtable, entryIT);
+				entryIT = bufentry;
 				continue;
 			}
 
@@ -435,8 +456,10 @@ namespace Lex {
 			if (FST::execute(fstLiteralString)) {
 
 				int length = _mbslen(word[i]);// Избавляемся от ковычек
-				if(length==2) Log::WriteError(log.stream, Error::geterrorin(310, line, position));
-				if(length > MAX_RAIN) throw  ERROR_THROW_IN(202, line, position);
+				if(length==2) Log::WriteError(log, Error::geterrorin(310, line, position));
+				if (length > MAX_RAIN) {
+					Log::WriteError(log, Error::geterrorin(202, line, position));
+					throw  ERROR_THROW_IN(202, line, position); }
 				for (int k = 0; k < length; k++)
 					word[i][k] = word[i][k + 1];
 				word[i][length - 2] = 0;
@@ -466,6 +489,7 @@ namespace Lex {
 				nameLiteral = _mbscat(bufL, (unsigned char*)charCountLit);
 				_mbscpy(entryIT.id, nameLiteral);
 				IT::Add(idtable, entryIT);
+				entryIT = bufentry;
 				continue;
 			}
 			FST::FST fstOperator(word[i], FST_OPERATOR);
@@ -478,6 +502,7 @@ namespace Lex {
 				entryIT.idxfirstLE = indexLex;
 				entryIT.idtype = IT::OP;
 				IT::Add(idtable, entryIT);
+				entryIT = bufentry;
 				continue;
 			}
 
@@ -491,6 +516,7 @@ namespace Lex {
 				entryIT.idxfirstLE = indexLex;
 				entryIT.idtype = IT::LO;
 				IT::Add(idtable, entryIT);
+				entryIT = bufentry;
 				continue;
 			}
 			FST::FST fstSemicolon(word[i], FST_SEMICOLON);
@@ -580,7 +606,7 @@ namespace Lex {
 			{
 				LT::Entry entryLT = writeEntry(entryLT, word[i][0], LT_TI_NULLIDX, line);
 					LT::Add(lextable, entryLT);
-					Log::WriteError(log.stream, Error::geterrorin(311, line, position));
+					Log::WriteError(log, Error::geterrorin(311, line, position));
 					continue;
 			}
 
@@ -598,12 +624,12 @@ namespace Lex {
 					indexLex--;
 					continue;
 				}
-				Log::WriteError(log.stream, Error::geterrorin(201, line, position));
+				Log::WriteError(log, Error::geterrorin(201, line, position));
 		}
 		lex.idtable = idtable;
 		lex.lextable = lextable;
-		if (count_main > 1) { Log::WriteError(log.stream, Error::geterror(302)); throw Error::geterror(302); }
-		if (count_main == 0) { Log::WriteError(log.stream, Error::geterror(301));  throw Error::geterror(301); }
+		if (count_main > 1) { Log::WriteError(log, Error::geterror(302));  }
+		if (count_main == 0) { Log::WriteError(log, Error::geterror(301));  }
 		return lex;
 	}
 

@@ -9,7 +9,7 @@
 #include "Log.h"
 namespace IT			// таблица идентификаторов
 {
-	enum IDDATATYPE { INT = 1, STR = 2, INT16 = 3, NUL = 6, VOI = 4, CHR = 5 };			// типы данных идентификаторов: integer, string, int16bit, без типпа данных, процедура, символ
+	enum IDDATATYPE { INT = 1, STR = 2, INT16 = 1, NUL = 6, VOI = 4, CHR = 5 };			// типы данных идентификаторов: integer, string, int16bit, без типпа данных, процедура, символ
 	enum IDTYPE { V = 1, F = 2, P = 3, L = 4, OP = 5, LO = 6 };	// типы идентификаторов: переменная, функция, параметр, литерал, оператор
 
 	struct Entry	// строка таблицы идентификаторов
@@ -19,6 +19,7 @@ namespace IT			// таблица идентификаторов
 		IDDATATYPE	iddatatype = NUL;			// тип данных
 		IDTYPE		idtype;				// тип идентификатора
 		int parm = 0;
+		int nums = 0; //0 - 10 СС 1 - 16 СС
 		union
 		{
 			int vint;					// значение integer

@@ -13,6 +13,7 @@ namespace Log
 	{
 		wchar_t logfile[PARM_MAX_SIZE];
 		std::ofstream* stream;
+		int errors_cout;
 	};
 
 	static const LOG INITLOG = { L"", NULL };
@@ -22,7 +23,7 @@ namespace Log
 	void WriteLog(ostream* log);
 	void WriteParm(ostream* log, Parm::PARM parm);
 	void WriteIn(ostream* log, In::IN in);
-	void WriteError(ostream* log, Error::ERROR error);
+	void WriteError(Log::LOG log, Error::ERROR error);
 	void Close(LOG log);
 	void writelex(In::IN in);
 };

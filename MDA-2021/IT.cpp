@@ -54,7 +54,7 @@ namespace IT {
 				}
 				else if (table.table[i].iddatatype == STR)  *log << setw(10) << left << "rain" << " | ";
 				else if (table.table[i].iddatatype == VOI) *log << setw(10) << left << "void" << " | ";
-				else *log << setw(10) << left << "bangou(16)" << " | ";
+				else if(table.table[i].nums == 16)*log << setw(10) << left << "bangou(16)" << " | ";
 			switch (table.table[i].idtype)
 			{
 			case L: {*log << setw(19) << left << "Литерал" << " | "; break; }
@@ -72,7 +72,7 @@ namespace IT {
 					*log << table.table[i].value.vint;
 				}
 				else if (table.table[i].iddatatype == STR) *log << '[' << table.table[i].value.vstr.len << ']' << table.table[i].value.vstr.str;
-				else if (table.table[i].iddatatype == INT16) *log << table.table[i].value.vstr.str;
+				else if (table.table[i].nums == 16) *log << table.table[i].value.vstr.str;
 			}
 			else *log << "-";
 			*log << endl;

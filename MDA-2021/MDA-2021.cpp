@@ -9,6 +9,7 @@ int wmain(int argc, wchar_t* argv[]) {
 			//Получение параметров
 		Parm::PARM parm = Parm::getparm(argc, argv);
 		log = Log::getlog(parm.log);
+		log.errors_cout = 0;
 		Log::WriteLine(log.stream, "Тест: ", "без ошибок ", "");
 		if(parm.more)
 			Log::WriteLine(&std::cout, "Тест: ", "без ошибок ", "");
@@ -82,7 +83,7 @@ int wmain(int argc, wchar_t* argv[]) {
 			//Генерация когда в Assembler
 		Gener::CodeGeneration(lex, parm, log);
 		Log::Close(log);
-
+		if (log.errors_cout>0) throw Error::geterror(0);
 			//Системные команды для коректоного запуска
 		system("msbuild.exe ..\\ASM /t:build  /p:cfg=\"release | x86 -v:q\"");
 		system("..\\ASM\\Debug\\Asm.exe");

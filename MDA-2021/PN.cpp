@@ -170,7 +170,7 @@ namespace Polish
 			}
 			if (v[i].lexema != LEX_LEFTTHESIS && v[i].lexema != LEX_RIGHTTHESIS && v[i].lexema != LEX_PLUS && v[i].lexema != LEX_MINUS && v[i].lexema != LEX_STAR && v[i].lexema != LEX_DIRSLASH && v[i].lexema != LEX_ID && v[i].lexema != LEX_LITERAL && v[i].lexema != LEX_LEFTBRACE && v[i].lexema != LEX_BRACELET && v[i].lexema != LEX_ENDIF)
 			{
-				Log::WriteError(log.stream, Error::geterror(1));
+				Log::WriteError(log, Error::geterror(1));
 				return false;
 			}
 		}
