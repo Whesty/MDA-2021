@@ -1,5 +1,6 @@
 #include "Parm.h"
 #include "Error.h"
+#include "Log.h"
 #include <locale>	
 #include <cwchar>
 #include <iostream>
@@ -65,7 +66,7 @@ namespace Parm {
 			std::cout << "	-LT                - Вывод таблицы лексем\n";
 			std::cout << "	-Lout              - Вывод преобразовонного исходного кода\n";
 		}
-		if (!in) throw ERROR_THROW(100);
+		if (!in) throw  ERROR_THROW(100);
 		if (!o)
 		{
 			wcscpy_s(parm.out, parm.in);

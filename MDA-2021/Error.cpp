@@ -1,4 +1,5 @@
 #include "Error.h"
+#include <iostream>
 namespace Error {
 	ERROR errors[ERROR_MAX_ENTRY] = {
 		ERROR_ENTRY(0,"Недопустимый код ошибки"),
@@ -66,9 +67,15 @@ namespace Error {
 
 	ERROR geterror(int id) {
 		if (id > 0 && id < ERROR_MAX_ENTRY) {
+			std::cout << "\nОшибка " << id << ": " << errors[id].message << std::endl;
+
 			return errors[id];
+
 		}
-		else return errors[0];
+		else {
+			std::cout << "\nОшибка " << 0 << ": " << errors[0].message << std::endl;
+			return errors[0];
+		}
 	}
 	ERROR geterrorin(int id, int line = -1, int col = -1) {
 		ERROR e;
@@ -76,8 +83,14 @@ namespace Error {
 			e = errors[id];
 			e.inext.col = col;
 			e.inext.line = line;
+			std::cout << "\nОшибка " << e.id << ": " << e.message << " cтрока " << e.inext.line << " позиция " << e.inext.col << std::endl;
+
 			return e;
 		}
-		else return errors[0];
+		else{
+			std::cout << "\nОшибка " << 0 << ": " << errors[0].message << std::endl;
+			return errors[0];
+		}
+
 	}
 }

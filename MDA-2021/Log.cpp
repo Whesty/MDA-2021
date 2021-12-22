@@ -87,7 +87,7 @@ namespace Log {
 			//Close(log);
 		}
 		//log.errors_cout++;
-		cout << "\nОшибка " << error.id << ": " << error.message << " cтрока " << error.inext.line << " позиция " << error.inext.col << endl;
+		//cout << "\nОшибка " << error.id << ": " << error.message << " cтрока " << error.inext.line << " позиция " << error.inext.col << endl;
 		throw error;
 	}
 	void Close(LOG log) {

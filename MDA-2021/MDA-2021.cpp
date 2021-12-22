@@ -91,6 +91,8 @@ int wmain(int argc, wchar_t* argv[]) {
 	}
 	catch (Error::ERROR e)
 	{
+		/*if (log.stream->fail())
+			cout << "\nОшибка " << e.id << ": " << e.message << endl;*/
 		cout << endl;
 		cout << "-----Завершилось с ошибкой\n\n";
 		//Log::WriteError(log.stream, e);
