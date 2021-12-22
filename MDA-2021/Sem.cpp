@@ -9,36 +9,6 @@ bool Sem::SemAnaliz(LT::LexTable lextable, IT::IdTable idtable, Log::LOG log)
 	{
 		switch (lextable.table[i].lexema)
 		{
-		case LEX_DIRSLASH:
-		{
-			int k = i;
-			if (lextable.table[i + 1].lexema == LEX_ID)
-			{
-				for (k; k > 0; k--)
-				{
-					if (lextable.table[k].lexema == LEX_ID)
-					{
-						if (idtable.table[lextable.table[k].idxTI].id == idtable.table[lextable.table[i + 1].idxTI].id)
-						{
-							if (lextable.table[k + 2].lexema == LEX_LITERAL && idtable.table[lextable.table[k + 2].idxTI].value.vint == 0)
-							{
-								sem_ok = false;
-								Log::WriteError(log.stream, Error::geterrorin(318, lextable.table[k].sn, 0));//Деление на нуль
-							}
-						}
-					}
-				}
-			}
-			if (lextable.table[i + 1].lexema == LEX_LITERAL)
-			{
-				if (idtable.table[lextable.table[i + 1].idxTI].value.vint == 0)
-				{
-					sem_ok = false;
-					Log::WriteError(log.stream, Error::geterrorin(318, lextable.table[k].sn, 0));//Деление на нуль
-				}
-			}
-			break;
-		}
 		case LEX_EQUAL: // выражение
 		{
 			if (i > 0 && lextable.table[i - 1].idxTI != LT_TI_NULLIDX) // левый операнд
@@ -105,18 +75,24 @@ bool Sem::SemAnaliz(LT::LexTable lextable, IT::IdTable idtable, Log::LOG log)
 						char l = lextable.table[k].lexema;
 						if (l == LEX_RETURN)
 						{
-							int next = lextable.table[k + 1].idxTI; // след. за return
-							if (next != LT_TI_NULLIDX)
-							{
-								// тип функции и возвращаемого значения не совпадают
-								if (idtable.table[next].iddatatype != e.iddatatype)
+							if (lextable.table[k + 1].lexema == LEX_LITERAL || lextable.table[k + 1].lexema == LEX_ID) {
+								int next = lextable.table[k + 1].idxTI; // след. за return
+								if (next != LT_TI_NULLIDX)
 								{
-									Log::WriteError(log.stream, Error::geterrorin(315, lextable.table[k].sn, 0));
-									sem_ok = false;
-									break;
+									// тип функции и возвращаемого значения не совпадают
+									if (idtable.table[next].iddatatype != e.iddatatype)
+									{
+										Log::WriteError(log.stream, Error::geterrorin(315, lextable.table[k].sn, 0));
+										sem_ok = false;
+										break;
+									}
 								}
+								break; // нашли exit
 							}
-							break; // нашли exit
+							else {
+								Log::WriteError(log.stream, Error::geterrorin(315, lextable.table[k].sn, 0));
+								throw Error::geterrorin(315, lextable.table[k].sn, 0);
+							}
 						}
 						if (k == lextable.size) break;
 					}

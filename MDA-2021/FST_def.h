@@ -280,4 +280,10 @@
 	FST::NODE(1, FST::RELATION('m', 4)), \
 	FST::NODE(1, FST::RELATION('p', 5)), \
 	FST::NODE()
+#define FST_COMP 5, \
+	FST::NODE(1, FST::RELATION('c', 1)), \
+	FST::NODE(1, FST::RELATION('o', 2)), \
+	FST::NODE(1, FST::RELATION('m', 3)), \
+	FST::NODE(1, FST::RELATION('p', 4)), \
+	FST::NODE()
 #pragma endregion

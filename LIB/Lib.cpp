@@ -17,6 +17,13 @@ extern "C"
 	{
 		return -strcmp(source1, source2);
 	}
+	int __stdcall comp(char* source1, char* source2)
+	{
+		for (int i = 0; i < std::strlen(source1); i++) {
+			if (source1[i] != source2[i]) return 0;
+		}
+		return 1;
+	}
 
 	int __stdcall outw(char* value)
 	{

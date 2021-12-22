@@ -316,6 +316,7 @@ namespace Gener
 			case LEX_MAIN:
 			{
 				str = str + SEPSTR("MAIN") + "main PROC";
+				//str = str + "\nINVOKE SetConsoleTitleA, offset consoleTitle\n";
 				break;
 			}
 			case LEX_FUNCTION:
@@ -449,22 +450,26 @@ namespace Gener
 				case IT::IDDATATYPE::INT: {
 					str = str + "mov eax, " + reinterpret_cast<char*>(e.id) + "\nmov result, eax	\nINVOKE int_to_char, offset result_str, result\n";
 					str = str + "INVOKE outw, offset result_str\n";
+					i++;
 					break;
 				}
 				case IT::IDDATATYPE::STR:
 					if (e.idtype == IT::IDTYPE::L)  str = str + "\nINVOKE outw, offset " + reinterpret_cast<char*>(e.id) + "\n";
 					else  str = str + "\nINVOKE outw, " + reinterpret_cast<char*>(e.id) + "\n";
+					i++;
 					break;
 				}
 				else {
 					if (LEXEMA(i + 2) == LEX_LEFTTHESIS && LEXEMA(i) != LEX_FUNCTION) // не объ€вление, а вызов
 						str = genCallFuncCode(tables, log, i+1);
-					str = str + "push eax\n";
+						str = str + "push eax\n";
 					switch (e.iddatatype)
 					{
 					case IT::IDDATATYPE::INT: {
 						str = str + "\nmov result, eax	\nINVOKE int_to_char, offset result_str, result\n";
-						str = str + "INVOKE outw, offset result_str\n";
+						str = str + "\nmov result, eax\n";
+						str = str + "INVOKE outn, result\n";
+						//str = "INVOKE WriteConsoleA,consoleHandle, offset result_str, sizeof result_str, 0, 0, \n	";
 						break;
 					}
 					case IT::IDDATATYPE::STR:
@@ -472,6 +477,7 @@ namespace Gener
 						/*else*/  str = str + "\nINVOKE outw, " + reinterpret_cast<char*>(e.id) + "\n";
 						break;
 					}
+					i++;
 					break;
 				}
 			}

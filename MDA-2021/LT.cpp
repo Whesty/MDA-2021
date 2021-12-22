@@ -34,7 +34,7 @@ namespace LT
 		{
 			*stream << "|" << std::setw(3) << i << " | " << std::setw(4) << lextable.table[i].lexema << "    |  " << std::setw(3)
 				<< lextable.table[i].sn << "   |";
-			if (lextable.table[i].idxTI == -1)
+			if (lextable.table[i].idxTI == 268435455)
 				*stream << "             |" << std::endl;
 			else
 				*stream << std::setw(8) << lextable.table[i].idxTI << "     |" << std::endl;

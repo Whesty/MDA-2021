@@ -6,6 +6,7 @@ int wmain(int argc, wchar_t* argv[]) {
 	int colp = 0;
 	try
 	{
+			//Получение параметров
 		Parm::PARM parm = Parm::getparm(argc, argv);
 		log = Log::getlog(parm.log);
 		Log::WriteLine(log.stream, "Тест: ", "без ошибок ", "");
@@ -19,34 +20,38 @@ int wmain(int argc, wchar_t* argv[]) {
 		if (parm.more)
 			Log::WriteParm(&std::cout, parm);
 
+			//Чтение из файла и сепаратор
 		In::IN in = In::getin(parm.in);
 		Log::WriteIn(log.stream, in);
 		if (parm.more)
 			Log::WriteIn(&std::cout, in);
 
+			//Лексический анализ
 		Lex::LEX lex = Lex::lexAnaliz(log, in);
+		cout << "-----Лексический анализ завершился\n" << endl;
+
+			//Вывод выходных данных лексического анализа
 		std::fstream fout;
-		fout.open(parm.out, std::ios::app);//ios::app - дописыввать в конец файла
+		fout.open(parm.out, std::ios_base::app);
 		if (!fout.is_open())
 			throw ERROR_THROW(110);
-		LT::showTable(lex.lextable, &fout);
+		LT::showTable(lex.lextable, &fout);//Таблица преобразованного исходного кода
 		if (parm.more || parm.Lout)
 		LT::showTable(lex.lextable, &std::cout);
 
-		LT::writeLexTable(log.stream, lex.lextable);
+		LT::writeLexTable(log.stream, lex.lextable);//Лексической таблицы
 		if (parm.more || parm.lt)
 			LT::writeLexTable( &std::cout, lex.lextable);
 
-		IT::showITable(lex.idtable, log.stream);
+		IT::showITable(lex.idtable, log.stream);//Таблица индетификаторов
 		if (parm.more || parm.it)
 			IT::showITable(lex.idtable, &std::cout);
 
+			//Синтаксический анализ
 		MFST::Mfst mfst(lex.lextable, GRB::getGreibach());//Автомат
 		mfst.log = log;
-		if (parm.more || parm.lenta)
-			mfst.more = true;
-		//Старт синтаксического анализа
-		if (mfst.start()) {
+		if (parm.more || parm.lenta) mfst.more = true;
+		if (mfst.start()) { //Старт синтаксического анализа
 			cout << "-----Синтаксический выполнен без ошибок\n" << endl;
 		}
 		else {
@@ -67,18 +72,27 @@ int wmain(int argc, wchar_t* argv[]) {
 		else cout << "-----Преобразование выражений завершено без ошибок\n" << endl;
 
 		LT::writeLexTable(log.stream, lex.lextable);
+		fout << "\n-----Преобразованная таблица лексем\n";
+		LT::showTable(lex.lextable, &fout);//Таблица преобразованного исходного кода
+		if (parm.more || parm.Lout) {
+			cout << "\n-----Преобразованная таблица лексем\n";
+			LT::showTable(lex.lextable, &std::cout);
+		}
+
+			//Генерация когда в Assembler
 		Gener::CodeGeneration(lex, parm, log);
 		Log::Close(log);
+
+			//Системные команды для коректоного запуска
 		system("msbuild.exe ..\\ASM /t:build  /p:cfg=\"release | x86 -v:q\"");
 		system("..\\ASM\\Debug\\Asm.exe");
-		//system("..\\Debug\\Asm.exe");
 		return 0;
 	}
 	catch (Error::ERROR e)
 	{
 		cout << endl;
 		cout << "-----Завершилось с ошибкой\n\n";
-		Log::WriteError(log.stream, e);
+		//Log::WriteError(log.stream, e);
 		return 0;
 	}
 }

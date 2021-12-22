@@ -17,6 +17,7 @@
 outn PROTO : SDWORD\n\
 outw PROTO : DWORD\n\
 len PROTO : DWORD\n\
+comp PROTO : DWORD, : DWORD\n\
 stcmp PROTO : DWORD, : DWORD\n"
 
 
@@ -26,7 +27,7 @@ stcmp PROTO : DWORD, : DWORD\n"
 
 
 #define CONST ".const\n\t\tnewline byte 13, 10, 0"
-#define DATA ".data\n\t\ttemp sdword ?\n\t\tbuffer byte 256 dup(0)"
+#define DATA ".data\n\t\ttemp sdword ?\n\t\tbuffer byte 256 dup(0)\n"
 #define CODE ".code\n\
 int_to_char PROC uses eax ebx ecx edi esi,\n\
 pstr: dword,\n\

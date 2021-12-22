@@ -26,6 +26,7 @@ namespace Lex {
 		int position = 0;
 
 		IT::Entry entryIT;
+		IT::Entry bufentry;
 		unsigned char emptystr[] = "";
 		bool findFunc = false;
 		bool findParm = false;
@@ -226,6 +227,49 @@ namespace Lex {
 				_mbscpy(entryIT.id, source2);// Имя индентификатора
 				IT::Add(idtable, entryIT);
 				indexID = indexID + 2;
+				continue;
+			}
+			FST::FST fstCOMP(word[i], FST_COMP);
+			if (FST::execute(fstCOMP))
+			{
+				int idx = TI_NULLIDX;
+				idx = IT::IsId(idtable, word[i]);
+				if (idx != TI_NULLIDX)
+				{
+					LT::Entry entryLT = writeEntry(entryLT, LEX_ID, idx, line);
+					LT::Add(lextable, entryLT);
+					continue;
+				}
+				LT::Entry entryLT = writeEntry(entryLT, LEX_ID, indexID++, line);
+				LT::Add(lextable, entryLT);
+
+				entryIT.idtype = IT::F;
+				entryIT.iddatatype = IT::INT;
+				entryIT.value.vint = TI_INT_DEFAULT;
+				entryIT.parm = 2;
+
+				// Добавляем в таблицу индентификаторов
+				entryIT.idxfirstLE = indexLex;
+				_mbscpy(entryIT.id, word[i]);// Имя индентификатора
+				IT::Add(idtable, entryIT);
+				entryIT.idtype = IT::P;
+				entryIT.iddatatype = IT::STR;
+				entryIT.value.vstr.len = 0;
+				memset(entryIT.value.vstr.str, TI_STR_DEFAULT, sizeof(char));
+				// Добавляем в таблицу индентификаторов 1 параметр
+				entryIT.idxfirstLE = -1;
+				_mbscpy(entryIT.id, source1);// Имя индентификатора
+				IT::Add(idtable, entryIT);
+				entryIT.idtype = IT::P;
+				entryIT.iddatatype = IT::STR;
+				entryIT.value.vstr.len = 0;
+				memset(entryIT.value.vstr.str, TI_STR_DEFAULT, sizeof(char));
+				// Добавляем в таблицу индентификаторов 2 параметр
+				entryIT.idxfirstLE = -1;
+				_mbscpy(entryIT.id, source2);// Имя индентификатора
+				IT::Add(idtable, entryIT);
+				indexID = indexID + 2;
+				
 				continue;
 			}
 			// Если это индитификатор (любое слово состоящие из букс цифр и знака подчеркивание)
@@ -558,8 +602,8 @@ namespace Lex {
 		}
 		lex.idtable = idtable;
 		lex.lextable = lextable;
-		if(count_main>1) Log::WriteError(log.stream, Error::geterror(302));
-		if(count_main==0) Log::WriteError(log.stream, Error::geterror(301));
+		if (count_main > 1) { Log::WriteError(log.stream, Error::geterror(302)); throw Error::geterror(302); }
+		if (count_main == 0) { Log::WriteError(log.stream, Error::geterror(301));  throw Error::geterror(301); }
 		return lex;
 	}
 
