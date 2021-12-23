@@ -24,6 +24,7 @@ namespace Log
 	void WriteParm(ostream* log, Parm::PARM parm);
 	void WriteIn(ostream* log, In::IN in);
 	void WriteError(Log::LOG log, Error::ERROR error);
+	void WriteErrors(Log::LOG log, Error::ERROR error);
 	void Close(LOG log);
 	void writelex(In::IN in);
 };

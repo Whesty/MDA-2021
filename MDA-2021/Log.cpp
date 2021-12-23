@@ -47,27 +47,11 @@ namespace Log {
 		strftime(temp, sizeof(temp), "\n---------------Протокол-----------------\n ------%d.%m.%y %T-----\n  ", tmf);
 		*log << temp;
 	}
-	//void writelex(In::IN in) {
-	//	int i = 0;
-	//	int il = 0;
-	//	//cout<< in.text[i];
-	//	while (i < in.size) {
-	//		cout << il << '.';
-	//		while (in.text[i] != '|' && in.text[i] != ' ' && i<in.size) {
-	//			cout << in.text[i++];
-	//		}
-	//		i++;
-	//		il++;
-	//		cout << endl;
-	//	}
-	//}
 	void WriteIn(ostream* log, In::IN in) {
 		*log /*<< "\n-----------------Исходные данные--------------------\n" << in.text*/
 		<< "\n\nВсего символов: " << in.size
 			<< "\n\nВсего строк: " << in.lines
 			<< "\n\nПропущено: " << in.ignor << endl;
-		//cout << in.text << endl;
-		//writelex(in);
 	}
 	void WriteParm(ostream* log, Parm::PARM parm) {
 		char in_text[PARM_MAX_SIZE];
@@ -84,11 +68,15 @@ namespace Log {
 		if (log.stream)
 		{
 			*log.stream << "\nОшибка " << error.id << ": " << error.message << " cтрока " << error.inext.line << " позиция " << error.inext.col << endl;
-			//Close(log);
 		}
-		//log.errors_cout++;
-		//cout << "\nОшибка " << error.id << ": " << error.message << " cтрока " << error.inext.line << " позиция " << error.inext.col << endl;
 		throw error;
+	}
+	void WriteErrors(Log::LOG log, Error::ERROR error) {
+		if (log.stream)
+		{
+			*log.stream << "\nОшибка " << error.id << ": " << error.message << " cтрока " << error.inext.line << " позиция " << error.inext.col << endl;
+		}
+		cout << "\nОшибка " << error.id << ": " << error.message << " cтрока " << error.inext.line << " позиция " << error.inext.col << endl;
 	}
 	void Close(LOG log) {
 		log.stream->close();

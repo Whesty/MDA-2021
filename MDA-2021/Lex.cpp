@@ -36,7 +36,7 @@ namespace Lex {
 		int Parm_count_IT = 0;
 		int count_main = 0;
 		bool newindf = false;
-
+		bool errorssem = false;
 
 		unsigned char* RegionPrefix = new unsigned char[10]{ "" };
 		unsigned char* buferRegionPrefix = new unsigned char[10]{ "" };
@@ -284,7 +284,8 @@ namespace Lex {
 					int idx = IT::IsId(idtable, word[i]);// Поиск функции в таблицы индентификаторов
 					if (idx != TI_NULLIDX) {
 						if(entryIT.iddatatype != IT::IDDATATYPE::NUL) {
-							Log::WriteError(log, Error::geterrorin(305, line, position));
+							errorssem = true;
+							Log::WriteErrors(log, Error::geterrorin(305, line, position));
 						}
 						LT::Entry entryLT = LT::writeEntry(entryLT, LEX_ID, idx, line);
 						LT::Add(lextable, entryLT);
@@ -297,7 +298,8 @@ namespace Lex {
 
 					if (idx != TI_NULLIDX) {
 						if (entryIT.iddatatype != IT::IDDATATYPE::NUL) {
-							Log::WriteError(log, Error::geterrorin(305, line, position));
+							errorssem = true;
+							Log::WriteErrors(log, Error::geterrorin(305, line, position));
 						}
 						LT::Entry entryLT = LT::writeEntry(entryLT, LEX_ID, idx, line);
 						LT::Add(lextable, entryLT);
@@ -310,7 +312,8 @@ namespace Lex {
 					if (idx != TI_NULLIDX)
 					{
 						if (entryIT.iddatatype != IT::IDDATATYPE::NUL) {
-							Log::WriteError(log, Error::geterrorin(305, line, position));
+							errorssem = true;
+							Log::WriteErrors(log, Error::geterrorin(305, line, position));
 						}
 						LT::Entry entryLT = writeEntry(entryLT, LEX_ID, idx, line);
 						LT::Add(lextable, entryLT);
@@ -328,7 +331,8 @@ namespace Lex {
 				else if (!findFunc) {//Если это не функция то индитификатор
 					entryIT.idtype = IT::V;
 					if (entryIT.iddatatype == IT::NUL) {
-						Log::WriteError(log, Error::geterrorin(303, line, position));
+						errorssem = true;
+						Log::WriteErrors(log, Error::geterrorin(303, line, position));
 					}
 					if (entryIT.iddatatype == IT::INT)// Если ранее была лексема integer
 						entryIT.value.vint = TI_INT_DEFAULT;
@@ -371,7 +375,7 @@ namespace Lex {
 					}
 				}
 				if (findSameID) continue;
-				if (lextable.table[lextable.size - 1].lexema == LEX_OPERATOR && idtable.table[lextable.table[lextable.size - 1].idxTI].id[0] == '-') {
+				if (lextable.table[lextable.size - 1].lexema == LEX_OPERATOR && lextable.table[lextable.size - 2].lexema == LEX_EQUAL && idtable.table[lextable.table[lextable.size - 1].idxTI].id[0] == '-') {
 					LT::Entry entryLT = writeEntry(entryLT, LEX_LITERAL, indexID-1, line);//Добавляем в таблицу лексем
 					LT::Add(lextable, entryLT, lextable.size - 1);
 				}
@@ -416,7 +420,7 @@ namespace Lex {
 					}
 				}
 				if (findSameID) continue;
-				if (lextable.table[lextable.size - 1].lexema == LEX_OPERATOR && idtable.table[lextable.table[lextable.size - 1].idxTI].id[0] == '-') {
+				if (lextable.table[lextable.size - 1].lexema == LEX_OPERATOR && lextable.table[lextable.size - 2].lexema == LEX_EQUAL && idtable.table[lextable.table[lextable.size - 1].idxTI].id[0] == '-') {
 					LT::Entry entryLT = writeEntry(entryLT, LEX_LITERAL, indexID - 1, line);//Добавляем в таблицу лексем
 					LT::Add(lextable, entryLT, lextable.size - 1);
 				}
@@ -456,7 +460,7 @@ namespace Lex {
 			if (FST::execute(fstLiteralString)) {
 
 				int length = _mbslen(word[i]);// Избавляемся от ковычек
-				if(length==2) Log::WriteError(log, Error::geterrorin(310, line, position));
+				if (length == 2) { errorssem = true; Log::WriteErrors(log, Error::geterrorin(310, line, position)); }
 				if (length > MAX_RAIN) {
 					Log::WriteError(log, Error::geterrorin(202, line, position));
 					throw  ERROR_THROW_IN(202, line, position); }
@@ -606,7 +610,8 @@ namespace Lex {
 			{
 				LT::Entry entryLT = writeEntry(entryLT, word[i][0], LT_TI_NULLIDX, line);
 					LT::Add(lextable, entryLT);
-					Log::WriteError(log, Error::geterrorin(311, line, position));
+					errorssem = true;
+					Log::WriteErrors(log, Error::geterrorin(311, line, position));
 					continue;
 			}
 
@@ -628,8 +633,9 @@ namespace Lex {
 		}
 		lex.idtable = idtable;
 		lex.lextable = lextable;
-		if (count_main > 1) { Log::WriteError(log, Error::geterror(302));  }
-		if (count_main == 0) { Log::WriteError(log, Error::geterror(301));  }
+		if (count_main > 1) { errorssem = true; Log::WriteErrors(log, Error::geterror(302));  }
+		if (count_main == 0) { errorssem = true; Log::WriteErrors(log, Error::geterror(301));  }
+		if (errorssem) throw Error::geterror(113);
 		return lex;
 	}
 

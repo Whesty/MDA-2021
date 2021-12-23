@@ -62,6 +62,11 @@ int wmain(int argc, wchar_t* argv[]) {
 		mfst.savededucation(); // Сохранить вывести правила вывода
 		mfst.printrules(); // Отладка: вывести правила вывода
 		if (Sem::SemAnaliz(lex.lextable, lex.idtable, log)) cout << "-----Сематичский анализ выполнен без ошибок\n" << endl;
+		else {
+			Log::WriteLine(log.stream, "-----Сематический анализ обнаружел ошибку(и)\n", "");
+			cout << "-----Сематический анализ обнаружел ошибку(и)\n" << endl << "-----Выполнение программы остановлено\n" << endl;
+			return 0;
+		}
 
 		bool polish_ok = Polish::PolishNotation(lex, log);					//выполнить преобразование выражений в ПОЛИЗ
 		if (!polish_ok)
@@ -85,6 +90,7 @@ int wmain(int argc, wchar_t* argv[]) {
 		Log::Close(log);
 		if (log.errors_cout>0) throw Error::geterror(0);
 			//Системные команды для коректоного запуска
+		cout << "-----Запуск сгенерированного кода\n" << endl;
 		system("msbuild.exe ..\\ASM /t:build  /p:cfg=\"release | x86 -v:q\"");
 		system("..\\ASM\\Debug\\Asm.exe");
 		return 0;
@@ -94,7 +100,7 @@ int wmain(int argc, wchar_t* argv[]) {
 		/*if (log.stream->fail())
 			cout << "\nОшибка " << e.id << ": " << e.message << endl;*/
 		cout << endl;
-		cout << "-----Завершилось с ошибкой\n\n";
+		cout << "-----Выполнение программы остановлено\n\n";
 		//Log::WriteError(log.stream, e);
 		return 0;
 	}

@@ -177,8 +177,8 @@ namespace MFST {
 						std::cout << "------------------------------------------------------------------------------------------" << std::endl;
 				}
 					*log.stream << "------------------------------------------------------------------------------------------" << std::endl;
-			sprintf_s(buf, MFST_DIAGN_MAXSIZE, "%d: всего строк %d, синтаксический анализ выполнен без ошибок", 0, lex.table[lex.size - 1].sn);
-			std::cout << "всего строк " << lex.table[lex.size - 1].sn << ", синтаксический анализ выполнен без ошибок" << std::endl;
+			sprintf_s(buf, MFST_DIAGN_MAXSIZE, "%d: Всего строк %d, синтаксический анализ выполнен без ошибок", 0, lex.table[lex.size - 1].sn);
+			std::cout << "\tСинтаксический анализ обработал строк " << lex.table[lex.size - 1].sn << "," << std::endl;
 			rc = true;
 			break;
 		case NS_NORULE:
